@@ -4,9 +4,22 @@ const usuario = localStorage.getItem("usuario");
 
 if (usuario) {
     authArea.innerHTML = `
-        <span class="me-2">👤 ${usuario}</span>
-        <button onclick="logout()" class="btn btn-danger btn-sm">Salir</button>
-    `;
+    <div class="d-flex align-items-center gap-3">
+
+        <div class="user-profile">
+
+            <span class="user-name">
+                ${usuario}
+            </span>
+
+        </div>
+
+        <button class="btn btn-sm btn-logout" onclick="logout()">
+            <i class="bi bi-box-arrow-right"></i>
+        </button>
+
+    </div>
+`;
 } else {
     authArea.innerHTML = `
         <button class="btn-login-custom" data-bs-toggle="modal" data-bs-target="#authModal">
@@ -35,6 +48,16 @@ function toggleAuth() {
         : "¿Ya tienes cuenta? Inicia sesión";
 
     document.getElementById("mensaje").style.display = "none";
+}
+
+function togglePassword() {
+
+    const input = document.getElementById("loginPass");
+
+    input.type =
+        input.type === "password"
+            ? "text"
+            : "password";
 }
 
 

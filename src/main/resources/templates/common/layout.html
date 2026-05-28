@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg sticky-top navbar-light bg-white">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" th:href="@{/}">
+            <div class="brand-logo-wrap"><i class="bi bi-heart-pulse-fill"></i></div>
+            <div>
+                <div class="brand-name">UltraVet</div>
+                <div class="brand-sub">Veterinaria</div>
+            </div>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-4">
+                <li class="nav-item">
+                    <!-- Para Inicio -->
+                    <a class="nav-link" th:href="@{/}"
+                        th:classappend="${currentPath == '/' ? 'active' : ''}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <!-- Para Servicios -->
+                    <a class="nav-link" th:href="@{/servicios}"
+                        th:classappend="${currentPath == '/servicios' ? 'active' : ''}">Servicios</a>
+                </li>
+                <li class="nav-item">
+                    <!-- Para Adopción -->
+                    <a class="nav-link" th:href="@{/adopcion}"
+                        th:classappend="${currentPath == '/adopcion' ? 'active' : ''}">Adopción</a>
+                </li>
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-urgencia" href="https://wa.me/51977182608" target="_blank">
+                        <i class="bi bi-telephone-fill me-1"></i>Contacto
+                    </a>
+                </li>
+                <li class="nav-item ms-lg-3" id="authArea"></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div th:fragment="auth-modal" class="modal fade" id="authModal" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content auth-modal-content border-0 shadow-lg">
+
+            <!-- HEADER -->
+            <div class="text-center mb-4">
+
+                <div class="auth-logo">
+                    <i class="bi bi-heart-pulse-fill"></i>
+                </div>
+
+                <h3 class="fw-bold mt-3 mb-1">
+                    Cuenta UltraVet
+                </h3>
+
+                <p class="text-muted small">
+                    Accede a tu cuenta veterinaria
+                </p>
+
+            </div>
+
+            <!-- LOGIN -->
+            <form id="loginForm">
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-person-fill"></i>
+                    </span>
+
+                    <input type="text" id="loginUser" class="form-control auth-input" placeholder="Usuario" required>
+
+                </div>
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-lock-fill"></i>
+                    </span>
+
+                    <input type="password" id="loginPass" class="form-control auth-input" placeholder="Contraseña"
+                        required>
+
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+
+                        <i class="bi bi-eye-fill"></i>
+
+                    </button>
+
+                </div>
+
+                <button class="btn btn-hero w-100 auth-btn">
+                    Ingresar
+                </button>
+
+            </form>
+
+            <!-- REGISTRO -->
+            <form id="registerForm" style="display:none;">
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </span>
+
+                    <input type="text" id="regUser" class="form-control auth-input" placeholder="Nuevo usuario"
+                        required>
+
+                </div>
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-lock-fill"></i>
+                    </span>
+
+                    <input type="password" id="regPass" class="form-control auth-input" placeholder="Nueva contraseña"
+                        required>
+
+                </div>
+
+                <button class="btn btn-success w-100 auth-btn">
+                    Registrarse
+                </button>
+
+            </form>
+
+            <!-- MENSAJE -->
+            <p id="mensaje" class="text-center mt-3 fw-bold" style="display:none;">
+            </p>
+
+            <!-- TOGGLE -->
+            <button class="btn btn-link text-decoration-none mt-2" onclick="toggleAuth()" id="toggleBtn">
+
+                ¿No tienes cuenta? Regístrate
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<footer th:fragment="footer">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-name"><i class="bi bi-heart-pulse-fill me-1"></i>Ultra<span>Vet</span></div>
+                <p class="mt-2" style="font-size:.84rem;">Atención veterinaria de calidad con amor y tecnología.</p>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6>Navegación</h6>
+                <a th:href="@{/}" class="text-white-50 d-block mb-1">Inicio</a>
+                <a th:href="@{/servicios}" class="text-white-50 d-block mb-1">Servicios</a>
+                <a th:href="@{/adopcion}" class="text-white-50 d-block mb-1">Adopción</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h6>Síguenos</h6>
+                <div class="mt-2">
+                    <a href="https://www.facebook.com/VeterinariaUltravet" target="_blank" class="social-icon"><i
+                            class="bi bi-facebook"></i></a>
+                    <a href="https://www.instagram.com/veterinariaultravet/?hl=es-la" target="_blank"
+                        class="social-icon"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h6>Newsletter</h6>
+                <div class="newsletter-wrap">
+                    <input type="email" class="newsletter-input" placeholder="tu@email.com">
+                    <button class="newsletter-btn"><i class="bi bi-send-fill"></i></button>
+                </div>
+            </div>
+        </div>
+        <hr class="footer-hr">
+        <div class="text-center footer-bottom">
+            <span>© 2026 UltraVet Veterinaria. Todos los derechos reservados.</span>
+        </div>
+    </div>
+</footer>
+
+</html>

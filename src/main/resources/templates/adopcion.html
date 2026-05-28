@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UltraVet - Veterinaria</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <nav th:replace="~{common/layout :: navbar}"></nav>
+    <div th:replace="~{common/layout :: auth-modal}"></div>
+
+
+    <!-- ADOPCIÓN -->
+    <section id="adopcion" class="py-5 bg-light">
+        <div class="container">
+            <div th:if="${mensajeExito}" class="alert alert-success text-center shadow-sm mb-4">
+
+                <span th:text="${mensajeExito}"></span>
+
+            </div>
+            <!-- Encabezado -->
+            <div class="text-center mb-5">
+                <span class="section-tag"> Adopción responsable</span>
+                <h2 class="section-title mt-2">
+                    Ellos buscan un hogar lleno de amor <br>
+                    ¿Te gustaría <span class="text-primary">cambiar una vida hoy</span>?
+                </h2>
+                <p class="section-lead mt-3" style="max-width:650px;margin:0 auto;">
+                    Cada uno de nuestros peluditos tiene una historia única. Algunos fueron rescatados,
+                    otros abandonados, pero todos comparten algo en común:
+                    <strong>el deseo de amar y ser amados</strong>.
+                </p>
+            </div>
+
+            <!-- Tarjetas -->
+            <div class="row g-4 justify-content-center">
+
+                <!-- Mascota 1 -->
+                <div class="col-sm-6 col-md-4">
+                    <div class="pet-card shadow rounded overflow-hidden position-relative">
+                        <span class="pet-badge bg-success">Disponible</span>
+                        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=400&q=80" alt="Toby"
+                            class="img-fluid">
+                        <div class="pet-info p-3">
+                            <h5>Toby</h5>
+                            <div class="breed text-muted">Corgi · 2 años</div>
+                            <p class="small mt-2">
+                                Alegre, sociable y muy juguetón. Ideal para familias activas que aman salir al aire
+                                libre.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small"> Lima</span>
+                                <button class="btn btn-sm btn-primary" onclick="abrirModal('Toby')"
+                                    data-bs-toggle="modal" data-bs-target="#adopcionModal">
+
+                                    Adoptar
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mascota 2 -->
+                <div class="col-sm-6 col-md-4">
+                    <div class="pet-card shadow rounded overflow-hidden position-relative">
+                        <span class="pet-badge bg-success">Disponible</span>
+                        <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&q=80" alt="Luna"
+                            class="img-fluid">
+                        <div class="pet-info p-3">
+                            <h5>Luna</h5>
+                            <div class="breed text-muted">Gata mestiza · 1 año</div>
+                            <p class="small mt-2">
+                                Dulce, tranquila y muy cariñosa. Perfecta para departamentos o espacios pequeños.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small"> Lima</span>
+                                <button class="btn btn-sm btn-primary" onclick="abrirModal('Luna')"
+                                    data-bs-toggle="modal" data-bs-target="#adopcionModal">
+
+                                    Adoptar
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mascota 3 -->
+                <div class="col-sm-6 col-md-4">
+                    <div class="pet-card shadow rounded overflow-hidden position-relative">
+                        <span class="pet-badge bg-warning text-dark">En proceso</span>
+                        <img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=400&q=80" alt="Max"
+                            class="img-fluid">
+                        <div class="pet-info p-3">
+                            <h5>Max</h5>
+                            <div class="breed text-muted">Perro Mestizo · 3 años</div>
+                            <p class="small mt-2">
+                                Protector, leal y lleno de energía. Excelente compañero para niños.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small"> Lima</span>
+                                <a href="#" class="btn btn-sm btn-outline-secondary disabled">Reservado</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mascota 4 -->
+                <div class="col-sm-6 col-md-4">
+                    <div class="pet-card shadow rounded overflow-hidden position-relative">
+                        <span class="pet-badge bg-success">Disponible</span>
+                        <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&q=80" alt="Rocky"
+                            class="img-fluid">
+                        <div class="pet-info p-3">
+                            <h5>Rocky</h5>
+                            <div class="breed text-muted">Labrador Retriever · 2 años</div>
+                            <p class="small mt-2">
+                                Muy cariñoso y protector. Ideal para personas responsables que buscan un compañero fiel.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small"> Lima</span>
+                                <button class="btn btn-sm btn-primary" onclick="abrirModal('Rocky')"
+                                    data-bs-toggle="modal" data-bs-target="#adopcionModal">
+
+                                    Adoptar
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mascota 5 -->
+                <div class="col-sm-6 col-md-4">
+                    <div class="pet-card shadow rounded overflow-hidden position-relative">
+                        <span class="pet-badge bg-success">Disponible</span>
+                        <img src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=400&q=80" alt="Michi"
+                            class="img-fluid">
+                        <div class="pet-info p-3">
+                            <h5>Michi</h5>
+                            <div class="breed text-muted">Gato criollo · 8 meses</div>
+                            <p class="small mt-2">
+                                Curioso, juguetón y muy independiente. Perfecto para quienes buscan compañía divertida.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small"> Lima</span>
+                                <button class="btn btn-sm btn-primary" onclick="abrirModal('Michi')"
+                                    data-bs-toggle="modal" data-bs-target="#adopcionModal">
+
+                                    Adoptar
+
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mascota 6 -->
+                <div class="col-sm-6 col-md-4">
+                    <div class="pet-card shadow rounded overflow-hidden position-relative">
+                        <span class="pet-badge bg-danger">Urgente</span>
+                        <img src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=400&q=80" alt="Kira"
+                            class="img-fluid">
+                        <div class="pet-info p-3">
+                            <h5>Kira</h5>
+                            <div class="breed text-muted">Golden Retriever · 4 años</div>
+                            <p class="small mt-2">
+                                Necesita hogar urgente. Es noble, activa y muy inteligente.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small"> Lima</span>
+                                <a href="#" class="btn btn-sm btn-danger">Ayudar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+    </section>
+
+    <!-- MODAL ADOPCIÓN -->
+
+    <div class="modal fade" id="adopcionModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content auth-adopcion-modal border-0">
+                <div class="text-center mb-3">
+                    <div class="auth-logo">
+                        <i class="bi bi-heart-pulse-fill"></i>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-center mb-4">
+                    Solicitud de adopción
+                </h3>
+                <form th:action="@{/adoptar}" method="post">
+
+                    <input type="hidden" name="mascota" id="mascotaSeleccionada">
+
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="nombre" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="mb-3">
+
+                        <input type="email" class="form-control" name="correo" placeholder="Correo electrónico"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+
+                        <input type="text" class="form-control" name="telefono" placeholder="Teléfono" required>
+
+                    </div>
+
+                    <button class="btn btn-hero w-100">
+                        Enviar solicitud
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer th:replace="~{common/layout :: footer}"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script th:src="@{/js/Js/auth.js}" defer></script>
+
+    <script>
+
+        function abrirModal(nombreMascota) {
+
+            document.getElementById("mascotaSeleccionada").value =
+                nombreMascota;
+
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -13,7 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Poppins:wght@600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
     <style>
         .categoria-titulo {
@@ -56,74 +56,8 @@
 
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none" href="index.html">
-                <div class="brand-logo-wrap"><i class="bi bi-heart-pulse-fill"></i></div>
-                <div>
-                    <div class="brand-name">UltraVet</div>
-                    <div class="brand-sub">Veterinaria</div>
-                </div>
-            </a>
-
-            <button class="navbar-toggler border-0" data-bs-toggle="collapse" data-bs-target="#navMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <script>
-                function logout() {
-                    localStorage.removeItem("logueado");
-                    window.location.href = "login.html";
-                }
-            </script>
-
-            <div class="collapse navbar-collapse" id="navMenu">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="adopcion.html">Adopción</a></li>
-                    <li class="nav-item ms-lg-3">
-                        <a class="btn btn-urgencia"
-                            href="https://wa.me/51977182608?text=Hola,%20quiero%20información%20sobre%20sus%20servicios"
-                            target="_blank">
-                            <i class="bi bi-telephone-fill me-1"></i>Contacto
-                        </a>
-                    </li>
-                    <li class="nav-item ms-lg-3" id="authArea"></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- MODAL LOGIN / REGISTER -->
-    <div class="modal fade" id="authModal">
-        <div class="modal-dialog">
-            <div class="modal-content p-4 rounded-4">
-
-                <h4 class="text-center mb-3">Cuenta UltraVet</h4>
-
-                <!-- LOGIN -->
-                <form id="loginForm">
-                    <input type="text" id="loginUser" class="form-control mb-2" placeholder="Usuario" required>
-                    <input type="password" id="loginPass" class="form-control mb-2" placeholder="Contraseña" required>
-                    <button class="btn btn-hero w-100">Ingresar</button>
-                </form>
-
-                <!-- REGISTER -->
-                <form id="registerForm" style="display:none;">
-                    <input type="text" id="regUser" class="form-control mb-2" placeholder="Usuario" required>
-                    <input type="password" id="regPass" class="form-control mb-2" placeholder="Contraseña" required>
-                    <button class="btn btn-success w-100">Registrarse</button>
-                </form>
-
-                <p id="mensaje" class="text-center mt-2 text-danger" style="display:none;"></p>
-
-                <button class="btn btn-link mt-2" onclick="toggleAuth()" id="toggleBtn">
-                    ¿No tienes cuenta? Regístrate
-                </button>
-
-            </div>
-        </div>
-    </div>
+    <nav th:replace="~{common/layout :: navbar}"></nav>
+    <div th:replace="~{common/layout :: auth-modal}"></div>
 
     <!-- SERVICIOS -->
     <section id="servicios">
@@ -329,15 +263,11 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="container text-center">
-            <p>© 2026 UltraVet Veterinaria. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    <script src="js/auth.js" defer></script>
+    <footer th:replace="~{common/layout :: footer}"></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script th:src="@{/js/Js/auth.js}" defer></script>
 </body>
 
 </html>
