@@ -85,10 +85,21 @@ const rutasProtegidas = [
     "/adopcion"
 ];
 
-if (!usuarioActivo && rutasProtegidas.includes(rutaActual)) {
+const rutasAdmin = [
+    "/admin"
+];
+
+const tipoUsuarioActual =
+    localStorage.getItem("tipoUsuario") ||
+    sessionStorage.getItem("tipoUsuario");
+
+if (
+    rutasAdmin.includes(rutaActual) &&
+    tipoUsuarioActual !== "ADMIN"
+) {
 
     alert(
-        "Debes registrarte o iniciar sesión para acceder."
+        "Acceso restringido para administradores."
     );
 
     window.location.href = "/";
@@ -109,8 +120,14 @@ if (authArea) {
             <div class="d-flex align-items-center gap-3">
 
                 <span class="user-name">
-                    ${usuarioActivo}
-                </span>
+
+    ${
+        tipoUsuarioActual === "ADMIN"
+        ? "👨‍💼 Admin"
+        : "👤 " + usuarioActivo
+    }
+
+</span>             
 
                 <button
                     class="btn btn-sm btn-logout"
@@ -156,7 +173,15 @@ function logout() {
     sessionStorage.removeItem("usuario");
     sessionStorage.removeItem("tipoUsuario");
 
+if (tipoUsuario === "ADMIN") {
+
+    window.location.href = "/admin";
+
+} else {
+
     location.reload();
+
+}
 
 }
 
@@ -391,6 +416,8 @@ document
 
         }
 
+        window.location.href = "/";
+
     } else {
 
         const dni =
@@ -427,9 +454,9 @@ document
             "ADMIN"
         );
 
-    }
+        window.location.href = "/admin";
 
-    location.reload();
+    }
 
 });
 
