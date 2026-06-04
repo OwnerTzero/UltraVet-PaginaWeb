@@ -1,32 +1,42 @@
-// NAVBAR DINÁMICO
-const authArea = document.getElementById("authArea");
-const usuario = localStorage.getItem("usuario");
+document.addEventListener("DOMContentLoaded", () => {
 
-if (usuario) {
-    authArea.innerHTML = `
-    <div class="d-flex align-items-center gap-3">
+    const authArea = document.getElementById("authArea");
 
-        <div class="user-profile">
+    if (!authArea) return;
 
-            <span class="user-name">
-                ${usuario}
-            </span>
+    const usuario = localStorage.getItem("usuario");
 
-        </div>
+    if (usuario) {
 
-        <button class="btn btn-sm btn-logout" onclick="logout()">
-            <i class="bi bi-box-arrow-right"></i>
-        </button>
+        authArea.innerHTML = `
+            <div class="d-flex align-items-center gap-2">
+                <span class="user-name">${usuario}</span>
 
-    </div>
-`;
-} else {
-    authArea.innerHTML = `
-        <button class="btn-login-custom" data-bs-toggle="modal" data-bs-target="#authModal">
-            <i class="bi bi-person-circle me-1"></i> Iniciar Sesión
-        </button>
-    `;
-}
+                <button class="btn btn-sm btn-logout"
+                    onclick="logout()">
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                </button>
+            </div>
+        `;
+
+    } else {
+
+        authArea.innerHTML = `
+            <button
+                class="btn-login-custom"
+                data-bs-toggle="modal"
+                data-bs-target="#authModal">
+
+                <i class="bi bi-person-circle me-1"></i>
+                Iniciar sesión
+
+            </button>
+        `;
+    }
+
+});
 
 // ===========================
 // CONFIGURACIÓN INICIAL
