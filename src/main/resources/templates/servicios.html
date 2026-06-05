@@ -8,50 +8,10 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Poppins:wght@600;700&display=swap"
         rel="stylesheet">
-
     <link rel="stylesheet" th:href="@{/css/style.css}">
-
-    <style>
-        .categoria-titulo {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.4rem;
-            margin-top: 3rem;
-            margin-bottom: 1.5rem;
-            color: var(--uv-brown);
-            border-left: 5px solid var(--uv-orange);
-            padding-left: 12px;
-        }
-
-        .info-servicio {
-            font-size: .85rem;
-            margin-top: .6rem;
-        }
-
-        .servicio-card {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .servicio-body {
-            flex: 1;
-        }
-
-        .cta-box {
-            background: linear-gradient(135deg, var(--uv-orange), var(--uv-orange-dark));
-            padding: 2.5rem;
-            border-radius: 20px;
-            color: #fff;
-            text-align: center;
-            margin-top: 3rem;
-        }
-    </style>
-
 </head>
 
 <body>
@@ -59,215 +19,544 @@
     <nav th:replace="~{common/layout :: navbar}"></nav>
     <div th:replace="~{common/layout :: auth-modal}"></div>
 
-    <!-- SERVICIOS -->
-    <section id="servicios">
-        <div class="container text-center mb-5">
-            <span class="section-tag">Nuestros Servicios</span>
-            <h2 class="section-title mt-2">Servicios pensados para el <span>bienestar</span> de tu mascota</h2>
-            <p class="section-lead mt-3">Atención médica, estética y preventiva para mejorar su calidad de vida.</p>
-        </div>
-
-        <div class="container">
-
-            <!-- MÉDICOS -->
-            <div class="categoria-titulo">Servicios Médicos</div>
-            <div class="row g-4">
-
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-clipboard2-pulse"></i></div>
-                        </div>
-                        <div class="servicio-body">
-                            <h5>Consulta General</h5>
-                            <p>Evaluación médica completa.<br>Diagnóstico inicial profesional.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> 1 hora</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> S/50</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-bandaid"></i></div>
-                        </div>
-                        <div class="servicio-body">
-                            <h5>Cirugía</h5>
-                            <p>Procedimientos especializados.<br>Equipos de alta tecnología.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> Variable</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> Desde S/60</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-droplet-half"></i></div>
-                        </div>
-                        <div class="servicio-body">
-                            <h5>Laboratorio</h5>
-                            <p>Análisis clínicos completos.<br>Resultados rápidos y seguros.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> 20 min</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> S/30</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+    <main>
+        <section id="servicios">
+            <div class="container text-center mb-5">
+                <span class="section-tag">Nuestros Servicios</span>
+                <h2 class="section-title mt-2">Servicios pensados para el <span>bienestar</span> de tu mascota</h2>
+                <p class="section-lead mt-3">Atención médica, estética y preventiva para mejorar su calidad de vida.</p>
             </div>
 
-            <!-- CUIDADO -->
-            <div class="categoria-titulo">Cuidado y Estética</div>
-            <div class="row g-4">
-
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-scissors"></i></div>
+            <div class="container">
+                <div class="service-toolbar">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-lg-5">
+                            <label for="buscadorServicios" class="form-label fw-bold">Buscar servicio</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="search" id="buscadorServicios" class="form-control"
+                                    placeholder="Consulta, vacunas, peluquería...">
+                            </div>
                         </div>
-                        <div class="servicio-body">
-                            <h5>Peluquería</h5>
-                            <p>Baño y corte profesional.<br>Cuidado estético completo.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> 1 hora</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> S/50</div>
+                        <div class="col-lg-7">
+                            <label class="form-label fw-bold d-block">Filtrar por categoría</label>
+                            <div class="service-filter-group" aria-label="Filtros de servicios">
+                                <button type="button" class="btn btn-outline-secondary active"
+                                    data-service-filter="todos">Todos</button>
+                                <button type="button" class="btn btn-outline-secondary"
+                                    data-service-filter="medicos">Médicos</button>
+                                <button type="button" class="btn btn-outline-secondary"
+                                    data-service-filter="cuidado">Cuidado</button>
+                                <button type="button" class="btn btn-outline-secondary"
+                                    data-service-filter="prevencion">Prevención</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-house-heart"></i></div>
-                        </div>
-                        <div class="servicio-body">
-                            <h5>Guardería</h5>
-                            <p>Cuidado seguro por horas.<br>Supervisión constante.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> Por horas</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> Desde S/20</div>
+                <div id="sinResultadosServicios" class="alert alert-warning text-center d-none" role="alert">
+                    No encontramos servicios con ese filtro. Prueba con otra palabra o categoría.
+                </div>
+
+                <div class="service-category" data-category-section="medicos">
+                    <div class="categoria-titulo">Servicios Médicos</div>
+                    <div class="row g-4">
+
+                        <div class="col-md-4 service-item" data-category="medicos"
+                            data-search="consulta general evaluacion medica diagnostico vacunas control">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-clipboard2-pulse"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Consulta General</h5>
+                                    <p>Evaluación médica completa, diagnóstico inicial y recomendaciones preventivas.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> 1 hora</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> S/50</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Consulta General" data-category-label="Servicios Médicos"
+                                        data-duration="1 hora" data-price="S/50"
+                                        data-description="Revisión física completa, orientación sobre vacunas, desparasitación y recomendaciones según la edad de la mascota.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
                             </div>
+                        </div>
+
+                        <div class="col-md-4 service-item" data-category="medicos"
+                            data-search="cirugia procedimientos especializados quirofano operacion">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-bandaid"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Cirugía</h5>
+                                    <p>Procedimientos especializados con evaluación previa y seguimiento posterior.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> Variable</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> Desde S/60</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Cirugía" data-category-label="Servicios Médicos"
+                                        data-duration="Según procedimiento" data-price="Desde S/60"
+                                        data-description="Atención quirúrgica para casos programados, con orientación previa, monitoreo básico y recomendaciones de recuperación.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 service-item" data-category="medicos"
+                            data-search="laboratorio analisis clinicos resultados examenes sangre">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-droplet-half"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Laboratorio</h5>
+                                    <p>Análisis clínicos de apoyo para diagnósticos rápidos y más seguros.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> 20 min</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> S/30</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Laboratorio" data-category-label="Servicios Médicos"
+                                        data-duration="20 min" data-price="S/30"
+                                        data-description="Exámenes de apoyo para evaluar el estado general de la mascota y orientar el tratamiento recomendado.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="service-category" data-category-section="cuidado">
+                    <div class="categoria-titulo">Cuidado y Estética</div>
+                    <div class="row g-4">
+
+                        <div class="col-md-4 service-item" data-category="cuidado"
+                            data-search="peluqueria baño corte aseo estetica">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-scissors"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Peluquería</h5>
+                                    <p>Baño, corte y cuidado estético para que tu mascota se sienta cómoda.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> 1 hora</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> S/50</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Peluquería" data-category-label="Cuidado y Estética"
+                                        data-duration="1 hora" data-price="S/50"
+                                        data-description="Servicio de higiene y estética que puede incluir baño, corte, limpieza básica y acabado según el tipo de pelaje.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 service-item" data-category="cuidado"
+                            data-search="guarderia cuidado por horas supervision estancia">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-house-heart"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Guardería</h5>
+                                    <p>Cuidado seguro por horas, con supervisión y ambiente tranquilo.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> Por horas</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> Desde S/20</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Guardería" data-category-label="Cuidado y Estética"
+                                        data-duration="Por horas" data-price="Desde S/20"
+                                        data-description="Acompañamiento temporal para mascotas que necesitan quedarse en un lugar seguro durante el día.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 service-item" data-category="cuidado"
+                            data-search="hospedaje estancia por dia alojamiento cuidado">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-moon-stars"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Hospedaje</h5>
+                                    <p>Estadía cómoda y segura para mascotas que necesitan cuidado continuo.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> Por día</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> Desde S/30</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Hospedaje" data-category-label="Cuidado y Estética"
+                                        data-duration="Por día" data-price="Desde S/30"
+                                        data-description="Alojamiento temporal con vigilancia, alimentación coordinada y seguimiento básico durante la estancia.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="service-category" data-category-section="prevencion">
+                    <div class="categoria-titulo">Prevención y Bienestar</div>
+                    <div class="row g-4">
+
+                        <div class="col-md-4 service-item" data-category="prevencion"
+                            data-search="vacunacion vacunas proteccion enfermedades">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-shield-plus"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Vacunación</h5>
+                                    <p>Protección preventiva contra enfermedades comunes y seguimiento del calendario.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> 20 min</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> S/35</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Vacunación" data-category-label="Prevención y Bienestar"
+                                        data-duration="20 min" data-price="S/35"
+                                        data-description="Aplicación de vacunas según especie, edad y calendario preventivo recomendado por el equipo veterinario.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 service-item" data-category="prevencion"
+                            data-search="desparasitacion parasitos prevencion interna externa">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-bug"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Desparasitación</h5>
+                                    <p>Control de parásitos internos y externos como parte del cuidado preventivo.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> 15 min</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> S/15</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Desparasitación" data-category-label="Prevención y Bienestar"
+                                        data-duration="15 min" data-price="S/15"
+                                        data-description="Atención preventiva para reducir riesgos por parásitos y mantener un control periódico de la salud.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 service-item" data-category="prevencion"
+                            data-search="emergencias urgencias atencion inmediata 24 horas criticos">
+                            <div class="servicio-card">
+                                <div class="servicio-top">
+                                    <div class="servicio-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                                </div>
+                                <div class="servicio-body">
+                                    <h5>Emergencias</h5>
+                                    <p>Atención rápida para casos críticos que requieren evaluación inmediata.</p>
+                                    <div class="info-servicio">
+                                        <div><i class="bi bi-hourglass-split text-warning"></i> 24h</div>
+                                        <div><i class="bi bi-cash-coin text-success"></i> Según caso</div>
+                                    </div>
+                                    <button type="button" class="btn-outline-orange service-detail-btn"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetalleServicio"
+                                        data-title="Emergencias" data-category-label="Prevención y Bienestar"
+                                        data-duration="Atención inmediata" data-price="Según caso"
+                                        data-description="Servicio orientado a situaciones urgentes. El costo depende del diagnóstico y procedimiento necesario.">
+                                        Ver detalle <i class="bi bi-info-circle ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="categoria-titulo">Horarios y precios referenciales</div>
+                <div class="table-responsive uv-table-wrap">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Horario recomendado</th>
+                                <th>Duración</th>
+                                <th>Precio</th>
+                                <th>Prioridad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Consulta General</td>
+                                <td>Lunes a sábado, mañana o tarde</td>
+                                <td>1 hora</td>
+                                <td>S/50</td>
+                                <td><span class="badge text-bg-success">Programable</span></td>
+                            </tr>
+                            <tr>
+                                <td>Vacunación</td>
+                                <td>Lunes a viernes, mañana</td>
+                                <td>20 min</td>
+                                <td>S/35</td>
+                                <td><span class="badge text-bg-primary">Preventivo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Peluquería</td>
+                                <td>Martes a sábado, con cita</td>
+                                <td>1 hora</td>
+                                <td>S/50</td>
+                                <td><span class="badge text-bg-warning">Con reserva</span></td>
+                            </tr>
+                            <tr>
+                                <td>Emergencias</td>
+                                <td>Atención 24h</td>
+                                <td>Según caso</td>
+                                <td>Variable</td>
+                                <td><span class="badge text-bg-danger">Urgente</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="appointment-panel">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-lg-6">
+                            <span class="section-tag">Agenda rápida</span>
+                            <h3 class="appointment-title mt-2">Solicita una cita desde la página</h3>
+                            <p class="section-lead mb-0">Completa los datos principales y se mostrará un resumen en una
+                                ventana modal antes de confirmar la solicitud.</p>
+                        </div>
+                        <div class="col-lg-6 text-lg-end">
+                            <button class="btn-hero" data-bs-toggle="modal" data-bs-target="#modalCotizar">
+                                Agendar cita <i class="bi bi-calendar-check ms-2"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-moon-stars"></i></div>
+                <div class="my-appointments-panel" id="misCitas">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center mb-3">
+                        <div>
+                            <span class="section-tag">Mis citas</span>
+                            <h3 class="appointment-title mt-2 mb-1">Seguimiento de solicitudes</h3>
+                            <p class="section-lead mb-0">Las citas registradas se guardan localmente en este navegador.</p>
                         </div>
-                        <div class="servicio-body">
-                            <h5>Hospedaje</h5>
-                            <p>Estadía cómoda y segura.<br>Atención continua.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> Por día</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> Desde S/30</div>
-                            </div>
-                        </div>
+                        <button type="button" class="btn btn-outline-secondary" id="limpiarCitasBtn">
+                            <i class="bi bi-trash3 me-1"></i> Limpiar canceladas
+                        </button>
+                    </div>
+
+                    <div id="citasVacias" class="empty-appointments text-center">
+                        <i class="bi bi-calendar2-plus"></i>
+                        <h5>Aún no tienes citas registradas</h5>
+                        <p>Cuando solicites una cita, aparecerá aquí para que puedas revisarla.</p>
+                    </div>
+
+                    <div id="tablaCitasWrap" class="table-responsive uv-table-wrap d-none">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Mascota</th>
+                                    <th>Servicio</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estado</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaCitasBody"></tbody>
+                        </table>
                     </div>
                 </div>
-
             </div>
+        </section>
+    </main>
 
-            <!-- PREVENCIÓN -->
-            <div class="categoria-titulo">Prevención y Bienestar</div>
-            <div class="row g-4">
-
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-shield-plus"></i></div>
-                        </div>
-                        <div class="servicio-body">
-                            <h5>Vacunación</h5>
-                            <p>Protección contra enfermedades.<br>Vacunas certificadas.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> 20 min</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> S/35</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-bug"></i></div>
-                        </div>
-                        <div class="servicio-body">
-                            <h5>Desparasitación</h5>
-                            <p>Eliminación de parásitos.<br>Cuidado preventivo.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> 15 min</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> S/15</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="servicio-card">
-                        <div class="servicio-top">
-                            <div class="servicio-icon"><i class="bi bi-exclamation-triangle"></i></div>
-                        </div>
-                        <div class="servicio-body">
-                            <h5>Emergencias</h5>
-                            <p>Atención inmediata 24h.<br>Casos críticos.</p>
-                            <div class="info-servicio">
-                                <div><i class="bi bi-hourglass-split text-warning"></i> 24h</div>
-                                <div><i class="bi bi-cash-coin text-success"></i> Según caso</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- CTA FINAL -->
-            <div class="cta-box">
-                <h3>¿Necesitas información personalizada?</h3>
-                <p>Solicita una cotización rápida y te responderemos lo antes posible.</p>
-                <button class="btn btn-light mt-2" data-bs-toggle="modal" data-bs-target="#modalCotizar">
-                    Cotizar servicios <i class="bi bi-file-earmark-text"></i>
-                </button>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- MODAL -->
-    <div class="modal fade" id="modalCotizar">
-        <div class="modal-dialog">
-            <div class="modal-content">
+    <div class="modal fade" id="modalDetalleServicio" tabindex="-1" aria-labelledby="detalleServicioTitulo"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content service-modal-content">
                 <div class="modal-header">
-                    <h5>Solicitar cotización</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <div>
+                        <span id="detalleServicioCategoria" class="modal-service-tag"></span>
+                        <h5 class="modal-title" id="detalleServicioTitulo">Detalle del servicio</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <input class="form-control mb-2" placeholder="Nombre">
-                        <input class="form-control mb-2" placeholder="Correo">
-                        <textarea class="form-control mb-3" placeholder="Servicio que deseas cotizar"></textarea>
-                        <button class="btn-hero w-100">Enviar solicitud</button>
-                    </form>
+                    <p id="detalleServicioDescripcion" class="mb-4"></p>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="modal-service-info">
+                                <i class="bi bi-hourglass-split"></i>
+                                <span>Duración</span>
+                                <strong id="detalleServicioDuracion"></strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="modal-service-info">
+                                <i class="bi bi-cash-coin"></i>
+                                <span>Precio</span>
+                                <strong id="detalleServicioPrecio"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn-hero modal-action-btn" id="btnReservarDesdeDetalle">
+                        Solicitar cita
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCotizar" tabindex="-1" aria-labelledby="modalCotizarTitulo" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content service-modal-content">
+                <div class="modal-header">
+                    <div>
+                        <span class="modal-service-tag">Formulario</span>
+                        <h5 class="modal-title" id="modalCotizarTitulo">Solicitar cita</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form id="formCotizar" novalidate>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="cotizaNombre" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="cotizaNombre" required>
+                                <div class="invalid-feedback">Ingresa tu nombre.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaCorreo" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="cotizaCorreo" required>
+                                <div class="invalid-feedback">Ingresa un correo válido.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaTelefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="cotizaTelefono" pattern="[0-9 ]{7,15}"
+                                    required>
+                                <div class="invalid-feedback">Ingresa un teléfono válido.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaMascota" class="form-label">Nombre de la mascota</label>
+                                <input type="text" class="form-control" id="cotizaMascota" required>
+                                <div class="invalid-feedback">Ingresa el nombre de tu mascota.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaServicio" class="form-label">Servicio</label>
+                                <select class="form-select" id="cotizaServicio" required>
+                                    <option value="">Selecciona un servicio</option>
+                                    <option>Consulta General</option>
+                                    <option>Cirugía</option>
+                                    <option>Laboratorio</option>
+                                    <option>Peluquería</option>
+                                    <option>Guardería</option>
+                                    <option>Hospedaje</option>
+                                    <option>Vacunación</option>
+                                    <option>Desparasitación</option>
+                                    <option>Emergencias</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona un servicio.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="cotizaFecha" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="cotizaFecha" required>
+                                <div class="invalid-feedback">Selecciona una fecha.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="cotizaHora" class="form-label">Hora</label>
+                                <input type="time" class="form-control" id="cotizaHora" required>
+                                <div class="invalid-feedback">Selecciona una hora.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="cotizaComentario" class="form-label">Comentario adicional</label>
+                                <textarea class="form-control" id="cotizaComentario" rows="3"
+                                    placeholder="Cuéntanos brevemente qué necesita tu mascota"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn-hero modal-action-btn">Guardar y ver resumen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmacionCita" tabindex="-1" aria-labelledby="confirmacionCitaTitulo"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content service-modal-content">
+                <div class="modal-body text-center p-4">
+                    <div class="confirmation-icon">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+                    <h5 id="confirmacionCitaTitulo" class="fw-bold mt-3">Solicitud registrada</h5>
+                    <p class="text-muted">Este es el resumen de la cita simulada:</p>
+                    <div id="resumenCotizacion" class="summary-box text-start"></div>
+                    <button type="button" class="btn-hero modal-action-btn mt-3" data-bs-dismiss="modal">
+                        Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDetalleCita" tabindex="-1" aria-labelledby="detalleCitaTitulo"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content service-modal-content">
+                <div class="modal-header">
+                    <div>
+                        <span class="modal-service-tag">Cita guardada</span>
+                        <h5 class="modal-title" id="detalleCitaTitulo">Detalle de cita</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="detalleCitaContenido" class="summary-box"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
 
     <footer th:replace="~{common/layout :: footer}"></footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
     <script th:src="@{/js/Js/auth.js}" defer></script>
+    <script th:src="@{/js/Js/script.js}" defer></script>
 </body>
 
 </html>
