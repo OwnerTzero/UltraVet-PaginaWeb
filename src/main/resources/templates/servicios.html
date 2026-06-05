@@ -343,14 +343,14 @@
                 <div class="appointment-panel">
                     <div class="row g-4 align-items-center">
                         <div class="col-lg-6">
-                            <span class="section-tag">Agenda rápida</span>
-                            <h3 class="appointment-title mt-2">Solicita una cita desde la página</h3>
-                            <p class="section-lead mb-0">Completa los datos principales y se mostrará un resumen en una
-                                ventana modal antes de confirmar la solicitud.</p>
+                            <span class="section-tag">Agenda y cotización</span>
+                            <h3 class="appointment-title mt-2">Queremos consentir a tu mascota</h3>
+                            <p class="section-lead mb-0">Cuéntanos qué necesita tu compañero y registra una cita o
+                                cotización rápida desde la página.</p>
                         </div>
                         <div class="col-lg-6 text-lg-end">
                             <button class="btn-hero" data-bs-toggle="modal" data-bs-target="#modalCotizar">
-                                Agendar cita <i class="bi bi-calendar-check ms-2"></i>
+                                Agendar o cotizar <i class="bi bi-calendar-check ms-2"></i>
                             </button>
                         </div>
                     </div>
@@ -361,7 +361,7 @@
                         <div>
                             <span class="section-tag">Mis citas</span>
                             <h3 class="appointment-title mt-2 mb-1">Seguimiento de solicitudes</h3>
-                            <p class="section-lead mb-0">Las citas registradas se guardan localmente en este navegador.</p>
+                            <p class="section-lead mb-0">Las solicitudes registradas se guardan localmente en este navegador.</p>
                         </div>
                         <button type="button" class="btn btn-outline-secondary" id="limpiarCitasBtn">
                             <i class="bi bi-trash3 me-1"></i> Limpiar canceladas
@@ -370,8 +370,8 @@
 
                     <div id="citasVacias" class="empty-appointments text-center">
                         <i class="bi bi-calendar2-plus"></i>
-                        <h5>Aún no tienes citas registradas</h5>
-                        <p>Cuando solicites una cita, aparecerá aquí para que puedas revisarla.</p>
+                        <h5>Aún no tienes solicitudes registradas</h5>
+                        <p>Cuando solicites una cita o cotización, aparecerá aquí para que puedas revisarla.</p>
                     </div>
 
                     <div id="tablaCitasWrap" class="table-responsive uv-table-wrap d-none">
@@ -379,6 +379,7 @@
                             <thead>
                                 <tr>
                                     <th>Mascota</th>
+                                    <th>Tipo</th>
                                     <th>Servicio</th>
                                     <th>Fecha</th>
                                     <th>Hora</th>
@@ -440,7 +441,7 @@
                 <div class="modal-header">
                     <div>
                         <span class="modal-service-tag">Formulario</span>
-                        <h5 class="modal-title" id="modalCotizarTitulo">Solicitar cita</h5>
+                        <h5 class="modal-title" id="modalCotizarTitulo">Solicitar cita o cotización</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
@@ -448,28 +449,16 @@
                     <div class="modal-body">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="cotizaNombre" class="form-label">Nombre completo</label>
-                                <input type="text" class="form-control" id="cotizaNombre" required>
-                                <div class="invalid-feedback">Ingresa tu nombre.</div>
+                                <label for="cotizaTipo" class="form-label">Tipo de solicitud</label>
+                                <select class="form-select" id="cotizaTipo" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option>Cita veterinaria</option>
+                                    <option>Cotización de servicios</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona el tipo de solicitud.</div>
                             </div>
                             <div class="col-md-6">
-                                <label for="cotizaCorreo" class="form-label">Correo electrónico</label>
-                                <input type="email" class="form-control" id="cotizaCorreo" required>
-                                <div class="invalid-feedback">Ingresa un correo válido.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="cotizaTelefono" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="cotizaTelefono" pattern="[0-9 ]{7,15}"
-                                    required>
-                                <div class="invalid-feedback">Ingresa un teléfono válido.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="cotizaMascota" class="form-label">Nombre de la mascota</label>
-                                <input type="text" class="form-control" id="cotizaMascota" required>
-                                <div class="invalid-feedback">Ingresa el nombre de tu mascota.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="cotizaServicio" class="form-label">Servicio</label>
+                                <label for="cotizaServicio" class="form-label">Servicio requerido</label>
                                 <select class="form-select" id="cotizaServicio" required>
                                     <option value="">Selecciona un servicio</option>
                                     <option>Consulta General</option>
@@ -484,20 +473,43 @@
                                 </select>
                                 <div class="invalid-feedback">Selecciona un servicio.</div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
+                                <label for="cotizaNombre" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="cotizaNombre"
+                                    placeholder="Ingrese su nombre completo" required>
+                                <div class="invalid-feedback">Ingresa tu nombre.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaCorreo" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="cotizaCorreo"
+                                    placeholder="ejemplo@gmail.com" required>
+                                <div class="invalid-feedback">Ingresa un correo válido.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaTelefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="cotizaTelefono" pattern="[0-9 ]{7,15}"
+                                    placeholder="999 999 999" required>
+                                <div class="invalid-feedback">Ingresa un teléfono válido.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaMascota" class="form-label">Nombre de la mascota</label>
+                                <input type="text" class="form-control" id="cotizaMascota" required>
+                                <div class="invalid-feedback">Ingresa el nombre de tu mascota.</div>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="cotizaFecha" class="form-label">Fecha</label>
                                 <input type="date" class="form-control" id="cotizaFecha" required>
                                 <div class="invalid-feedback">Selecciona una fecha.</div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label for="cotizaHora" class="form-label">Hora</label>
                                 <input type="time" class="form-control" id="cotizaHora" required>
                                 <div class="invalid-feedback">Selecciona una hora.</div>
                             </div>
                             <div class="col-12">
-                                <label for="cotizaComentario" class="form-label">Comentario adicional</label>
-                                <textarea class="form-control" id="cotizaComentario" rows="3"
-                                    placeholder="Cuéntanos brevemente qué necesita tu mascota"></textarea>
+                                <label for="cotizaComentario" class="form-label">Detalles adicionales</label>
+                                <textarea class="form-control" id="cotizaComentario" rows="4"
+                                    placeholder="Describa brevemente lo que necesita"></textarea>
                             </div>
                         </div>
                     </div>
@@ -519,7 +531,7 @@
                         <i class="bi bi-check2-circle"></i>
                     </div>
                     <h5 id="confirmacionCitaTitulo" class="fw-bold mt-3">Solicitud registrada</h5>
-                    <p class="text-muted">Este es el resumen de la cita simulada:</p>
+                    <p class="text-muted">Este es el resumen de la solicitud simulada:</p>
                     <div id="resumenCotizacion" class="summary-box text-start"></div>
                     <button type="button" class="btn-hero modal-action-btn mt-3" data-bs-dismiss="modal">
                         Entendido
@@ -535,8 +547,8 @@
             <div class="modal-content service-modal-content">
                 <div class="modal-header">
                     <div>
-                        <span class="modal-service-tag">Cita guardada</span>
-                        <h5 class="modal-title" id="detalleCitaTitulo">Detalle de cita</h5>
+                        <span class="modal-service-tag">Solicitud guardada</span>
+                        <h5 class="modal-title" id="detalleCitaTitulo">Detalle de solicitud</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>

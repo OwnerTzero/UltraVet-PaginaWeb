@@ -202,32 +202,79 @@
                     </div>
                 </div>
                 <h3 class="fw-bold text-center mb-4">
-                    Solicitud de adopción
+                    El primer paso para cambiar una vida
                 </h3>
-                <form th:action="@{/adoptar}" method="post">
+              <form th:action="@{/adoptar}" method="post">
 
-                    <input type="hidden" name="mascota" id="mascotaSeleccionada">
+    <input type="hidden"
+           name="mascota"
+           id="mascotaSeleccionada">
 
-                    <div class="mb-3">
-                        <input type="text" class="form-control" name="nombre" placeholder="Tu nombre" required>
-                    </div>
-                    <div class="mb-3">
+    <div class="mb-3">
+        <input type="text"
+               class="form-control"
+               name="nombre"
+               placeholder="Nombre completo"
+               required>
+    </div>
 
-                        <input type="email" class="form-control" name="correo" placeholder="Correo electrónico"
-                            required>
-                    </div>
+    <div class="mb-3">
+        <input type="email"
+               class="form-control"
+               name="correo"
+               placeholder="Correo electrónico"
+               required>
+    </div>
 
-                    <div class="mb-3">
+    <div class="mb-3">
+        <input type="tel"
+               class="form-control"
+               name="telefono"
+               placeholder="Teléfono"
+               required>
+    </div>
 
-                        <input type="text" class="form-control" name="telefono" placeholder="Teléfono" required>
+    <div class="mb-3">
+        <input type="text"
+               class="form-control"
+               placeholder="Distrito de residencia"
+               required>
+    </div>
 
-                    </div>
+    <div class="mb-3">
 
-                    <button class="btn btn-hero w-100">
-                        Enviar solicitud
-                    </button>
+        <select class="form-select" required>
 
-                </form>
+            <option value="">
+                ¿Tiene experiencia con mascotas?
+            </option>
+
+            <option>
+                Sí
+            </option>
+
+            <option>
+                No
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+
+        <textarea class="form-control"
+                  rows="4"
+                  placeholder="¿Por qué desea adoptar esta mascota?"
+                  required></textarea>
+
+    </div>
+
+    <button class="btn btn-hero w-100">
+        Enviar solicitud
+    </button>
+
+</form>
 
             </div>
 

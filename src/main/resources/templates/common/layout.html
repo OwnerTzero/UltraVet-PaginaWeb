@@ -65,18 +65,81 @@
 
             </div>
 
+            <!-- TABS -->
+            <ul class="nav nav-pills nav-justified mb-4" id="authTabs">
+
+                <li class="nav-item">
+                    <button class="nav-link active"
+                            id="clienteTab"
+                            type="button"
+                            onclick="cambiarTipoAcceso('CLIENTE')">
+
+                        Cliente
+
+                    </button>
+                </li>
+
+                <li class="nav-item">
+                    <button class="nav-link"
+                            id="adminTab"
+                            type="button"
+                            onclick="cambiarTipoAcceso('ADMIN')">
+
+                        Administrador
+
+                    </button>
+                </li>
+
+            </ul>
+
             <!-- LOGIN -->
+
             <form id="loginForm">
 
-                <div class="input-group mb-3">
+                <input type="hidden" id="tipoAcceso" value="CLIENTE">
 
-                    <span class="input-group-text auth-icon">
-                        <i class="bi bi-person-fill"></i>
-                    </span>
+                <!-- CLIENTE -->
+                <div id="clienteLogin">
 
-                    <input type="text" id="loginUser" class="form-control auth-input" placeholder="Usuario" required>
+                    <div class="input-group mb-3">
+
+                        <span class="input-group-text auth-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </span>
+
+                        <input
+                            type="email"
+                            id="loginCorreo"
+                            class="form-control auth-input"
+                            placeholder="Correo electrónico"
+                            required>
+
+                    </div>
 
                 </div>
+
+                <!-- ADMIN -->
+
+                <div id="adminLogin" style="display:none;">
+
+                    <div class="input-group mb-3">
+
+                        <span class="input-group-text auth-icon">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            id="loginDni"
+                            class="form-control auth-input"
+                            placeholder="DNI"
+                            maxlength="8">
+
+                    </div>
+
+                </div>
+
+                <!-- PASSWORD -->
 
                 <div class="input-group mb-3">
 
@@ -84,10 +147,17 @@
                         <i class="bi bi-lock-fill"></i>
                     </span>
 
-                    <input type="password" id="loginPass" class="form-control auth-input" placeholder="Contraseña"
+                    <input
+                        type="password"
+                        id="loginPass"
+                        class="form-control auth-input"
+                        placeholder="Contraseña"
                         required>
 
-                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="togglePassword()">
 
                         <i class="bi bi-eye-fill"></i>
 
@@ -95,23 +165,96 @@
 
                 </div>
 
+                <!-- RECORDAR -->
+
+                <div
+                    id="recordarContainer"
+                    class="form-check mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="recordarSesion">
+
+                    <label
+                        class="form-check-label"
+                        for="recordarSesion">
+
+                        Recordar sesión
+
+                    </label>
+
+                </div>
+
+                <!-- RECUPERAR -->
+
+                <div
+                    id="recuperarContainer"
+                    class="text-end mb-3">
+
+                    <a href="#"
+                       class="small text-decoration-none"
+                       onclick="mostrarRecuperarPassword()">
+
+                        ¿Olvidaste tu contraseña?
+
+                    </a>
+
+                </div>
+
                 <button class="btn btn-hero w-100 auth-btn">
+
                     Ingresar
+
                 </button>
 
             </form>
 
-            <!-- REGISTRO -->
+            <!-- REGISTRO CLIENTE -->
+
             <form id="registerForm" style="display:none;">
 
                 <div class="input-group mb-3">
 
                     <span class="input-group-text auth-icon">
-                        <i class="bi bi-person-plus-fill"></i>
+                        <i class="bi bi-person-fill"></i>
                     </span>
 
-                    <input type="text" id="regUser" class="form-control auth-input" placeholder="Nuevo usuario"
+                    <input
+                        type="text"
+                        id="regNombre"
+                        class="form-control auth-input"
+                        placeholder="Nombres y apellidos"
                         required>
+
+                </div>
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-envelope-fill"></i>
+                    </span>
+
+                    <input
+                        type="email"
+                        id="regCorreo"
+                        class="form-control auth-input"
+                        placeholder="Correo electrónico"
+                        required>
+
+                </div>
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-telephone-fill"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        id="regTelefono"
+                        class="form-control auth-input"
+                        placeholder="Teléfono">
 
                 </div>
 
@@ -121,23 +264,77 @@
                         <i class="bi bi-lock-fill"></i>
                     </span>
 
-                    <input type="password" id="regPass" class="form-control auth-input" placeholder="Nueva contraseña"
+                    <input
+                        type="password"
+                        id="regPass"
+                        class="form-control auth-input"
+                        placeholder="Contraseña"
+                        required>
+
+                </div>
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </span>
+
+                    <input
+                        type="password"
+                        id="regPass2"
+                        class="form-control auth-input"
+                        placeholder="Confirmar contraseña"
                         required>
 
                 </div>
 
                 <button class="btn btn-success w-100 auth-btn">
-                    Registrarse
+
+                    Crear cuenta
+
                 </button>
 
             </form>
 
-            <!-- MENSAJE -->
-            <p id="mensaje" class="text-center mt-3 fw-bold" style="display:none;">
+            <!-- RECUPERAR CONTRASEÑA -->
+
+            <form id="recoverForm" style="display:none;">
+
+                <div class="input-group mb-3">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-envelope-fill"></i>
+                    </span>
+
+                    <input
+                        type="email"
+                        id="recoverCorreo"
+                        class="form-control auth-input"
+                        placeholder="Correo registrado">
+
+                </div>
+
+                <button class="btn btn-warning w-100 auth-btn">
+
+                    Recuperar contraseña
+
+                </button>
+
+            </form>
+
+            <!-- MENSAJES -->
+
+            <p id="mensaje"
+               class="text-center mt-3 fw-bold"
+               style="display:none;">
             </p>
 
             <!-- TOGGLE -->
-            <button class="btn btn-link text-decoration-none mt-2" onclick="toggleAuth()" id="toggleBtn">
+
+            <button
+                class="btn btn-link text-decoration-none mt-2"
+                onclick="toggleAuth()"
+                id="toggleBtn">
 
                 ¿No tienes cuenta? Regístrate
 
@@ -148,6 +345,18 @@
     </div>
 
 </div>
+    <section th:fragment="mapa" class="py-0">
+
+    <iframe
+        src="https://maps.google.com/maps?q=Av.%2027%20de%20Diciembre%201200%20Villa%20Maria%20del%20Triunfo&t=&z=16&ie=UTF8&iwloc=&output=embed"
+        width="100%"
+        height="350"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy">
+    </iframe>
+
+</section>
 
 <footer th:fragment="footer">
     <div class="container">
@@ -171,13 +380,28 @@
                         class="social-icon"><i class="bi bi-instagram"></i></a>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <h6>Newsletter</h6>
-                <div class="newsletter-wrap">
-                    <input type="email" class="newsletter-input" placeholder="tu@email.com">
-                    <button class="newsletter-btn"><i class="bi bi-send-fill"></i></button>
-                </div>
-            </div>
+          <div class="col-lg-4 col-md-6">
+
+    <h6>Ubicación</h6>
+
+    <p class="text-white-50 mb-2">
+        <i class="bi bi-geo-alt-fill me-2"></i>
+        Paradero 20 de Av. 27 de Diciembre 1200,
+        Villa María del Triunfo 15818
+    </p>
+
+    <p class="text-white-50 mb-2">
+        <i class="bi bi-clock-fill me-2"></i>
+        Lunes a Sábado
+        9:30 a.m. - 20:00 p.m.
+    </p>
+
+    <p class="text-white-50">
+        <i class="bi bi-telephone-fill me-2"></i>
+        +51 977 182 608
+    </p>
+
+</div>
         </div>
         <hr class="footer-hr">
         <div class="text-center footer-bottom">

@@ -679,3 +679,30 @@ footer a:hover { color: var(--uv-orange); padding-left: 4px; }
         justify-content: flex-start;
     }
 }
+
+/* TABS CLIENTE / ADMIN */
+
+#authTabs .nav-link{
+    color: var(--uv-dark-gray);
+    font-weight: 700;
+    border-radius: 12px;
+    transition: .3s;
+    background: transparent;
+}
+
+#authTabs .nav-link:hover{
+    color: var(--uv-orange-dark);
+    background: rgba(246,147,30,.08);
+}
+
+#authTabs .nav-link.active{
+    background: linear-gradient(
+        135deg,
+        var(--uv-orange),
+        var(--uv-orange-dark)
+    ) !important;
+
+    color: #fff !important;
+
+    box-shadow: 0 6px 18px rgba(239,115,2,.25);
+}

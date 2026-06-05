@@ -78,6 +78,7 @@ function iniciarDetalleServicios() {
     const duracion = document.getElementById("detalleServicioDuracion");
     const precio = document.getElementById("detalleServicioPrecio");
     const reservar = document.getElementById("btnReservarDesdeDetalle");
+    const tipoSelect = document.getElementById("cotizaTipo");
     const servicioSelect = document.getElementById("cotizaServicio");
     const detalleModal = document.getElementById("modalDetalleServicio");
     const citaModal = document.getElementById("modalCotizar");
@@ -102,6 +103,10 @@ function iniciarDetalleServicios() {
     reservar.addEventListener("click", () => {
         if (servicioSelect && servicioSeleccionado) {
             servicioSelect.value = servicioSeleccionado;
+        }
+
+        if (tipoSelect) {
+            tipoSelect.value = "Cita veterinaria";
         }
 
         const modalDetalle = bootstrap.Modal.getOrCreateInstance(detalleModal);
@@ -138,6 +143,7 @@ function iniciarFormularioCitas() {
 
         const datos = {
             id: `cita-${Date.now()}`,
+            tipoSolicitud: document.getElementById("cotizaTipo").value,
             nombre: document.getElementById("cotizaNombre").value.trim(),
             correo: document.getElementById("cotizaCorreo").value.trim(),
             telefono: document.getElementById("cotizaTelefono").value.trim(),
@@ -243,6 +249,7 @@ function renderizarCitas() {
     tabla.innerHTML = citas.map((cita) => `
         <tr>
             <td>${escaparHTML(cita.mascota)}</td>
+            <td>${escaparHTML(cita.tipoSolicitud || "Cita veterinaria")}</td>
             <td>${escaparHTML(cita.servicio)}</td>
             <td>${escaparHTML(formatearFecha(cita.fecha))}</td>
             <td>${escaparHTML(cita.hora)}</td>
@@ -274,7 +281,7 @@ function mostrarDetalleCita(citaId) {
         return;
     }
 
-    titulo.textContent = `${cita.servicio} para ${cita.mascota}`;
+    titulo.textContent = `${cita.tipoSolicitud || "Solicitud"}: ${cita.servicio}`;
     contenido.innerHTML = crearResumenCita(cita);
     bootstrap.Modal.getOrCreateInstance(modal).show();
 }
@@ -295,6 +302,7 @@ function cancelarCita(citaId) {
 function crearResumenCita(cita) {
     return `
         <p><strong>Cliente:</strong> ${escaparHTML(cita.nombre)}</p>
+        <p><strong>Tipo:</strong> ${escaparHTML(cita.tipoSolicitud || "Cita veterinaria")}</p>
         <p><strong>Mascota:</strong> ${escaparHTML(cita.mascota)}</p>
         <p><strong>Servicio:</strong> ${escaparHTML(cita.servicio)}</p>
         <p><strong>Fecha y hora:</strong> ${escaparHTML(formatearFecha(cita.fecha))} ${escaparHTML(cita.hora)}</p>
