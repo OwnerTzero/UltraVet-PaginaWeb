@@ -226,7 +226,7 @@ function mostrarMensaje(texto, color = "red") {
 // ===========================
 // LOGIN
 // ===========================
-
+/*
 document.getElementById("loginForm").addEventListener("submit", function (e) {
 
     e.preventDefault();
@@ -283,12 +283,12 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
 
     }
 
-});
+}); */
 
 // ===========================
 // REGISTRO CLIENTE
 // ===========================
-
+/**
 document.getElementById("registerForm").addEventListener("submit", function (e) {
 
     e.preventDefault();
@@ -321,7 +321,7 @@ document.getElementById("registerForm").addEventListener("submit", function (e) 
 
     toggleAuth();
 
-});
+}); */
 
 // ===========================
 // RECUPERAR PASSWORD

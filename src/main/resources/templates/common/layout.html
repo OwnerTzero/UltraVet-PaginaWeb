@@ -18,8 +18,7 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-4">
                 <li class="nav-item">
                     <!-- Para Inicio -->
-                    <a class="nav-link" th:href="@{/}"
-                        th:classappend="${currentPath == '/' ? 'active' : ''}">Inicio</a>
+                    <a class="nav-link" th:href="@{/}" th:classappend="${currentPath == '/' ? 'active' : ''}">Inicio</a>
                 </li>
                 <li class="nav-item">
                     <!-- Para Servicios -->
@@ -36,7 +35,38 @@
                         <i class="bi bi-telephone-fill me-1"></i>Contacto
                     </a>
                 </li>
-                <li class="nav-item ms-lg-3" id="authArea"></li>
+                <!-- Usuario NO logueado -->
+                <li class="nav-item ms-lg-3" th:if="${session.usuarioNombre == null}">
+
+                    <button class="btn-login-custom" data-bs-toggle="modal" data-bs-target="#authModal">
+
+                        <i class="bi bi-person-circle me-1"></i>
+                        Iniciar sesión
+
+                    </button>
+
+                </li>
+
+                <!-- Usuario logueado -->
+                <li class="nav-item ms-lg-3" th:if="${session.usuarioNombre != null}">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <span class="user-name">
+
+                            👤 <span th:text="${session.usuarioNombre}"></span>
+
+                        </span>
+
+                        <a th:href="@{/logout}" class="btn btn-sm btn-logout">
+
+                            <i class="bi bi-box-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+
+                </li>
             </ul>
         </div>
     </div>
@@ -69,10 +99,8 @@
             <ul class="nav nav-pills nav-justified mb-4" id="authTabs">
 
                 <li class="nav-item">
-                    <button class="nav-link active"
-                            id="clienteTab"
-                            type="button"
-                            onclick="cambiarTipoAcceso('CLIENTE')">
+                    <button class="nav-link active" id="clienteTab" type="button"
+                        onclick="cambiarTipoAcceso('CLIENTE')">
 
                         Cliente
 
@@ -80,10 +108,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <button class="nav-link"
-                            id="adminTab"
-                            type="button"
-                            onclick="cambiarTipoAcceso('ADMIN')">
+                    <button class="nav-link" id="adminTab" type="button" onclick="cambiarTipoAcceso('ADMIN')">
 
                         Administrador
 
@@ -94,7 +119,7 @@
 
             <!-- LOGIN -->
 
-            <form id="loginForm">
+            <form id="loginForm" method="post" th:action="@{/login}">
 
                 <input type="hidden" id="tipoAcceso" value="CLIENTE">
 
@@ -107,12 +132,8 @@
                             <i class="bi bi-envelope-fill"></i>
                         </span>
 
-                        <input
-                            type="email"
-                            id="loginCorreo"
-                            class="form-control auth-input"
-                            placeholder="Correo electrónico"
-                            required>
+                        <input type="email" id="loginCorreo" name="correo" class="form-control auth-input"
+                            placeholder="Correo electrónico" required>
 
                     </div>
 
@@ -128,11 +149,7 @@
                             <i class="bi bi-person-badge-fill"></i>
                         </span>
 
-                        <input
-                            type="text"
-                            id="loginDni"
-                            class="form-control auth-input"
-                            placeholder="DNI"
+                        <input type="text" id="loginDni" class="form-control auth-input" placeholder="DNI"
                             maxlength="8">
 
                     </div>
@@ -147,17 +164,10 @@
                         <i class="bi bi-lock-fill"></i>
                     </span>
 
-                    <input
-                        type="password"
-                        id="loginPass"
-                        class="form-control auth-input"
-                        placeholder="Contraseña"
-                        required>
+                    <input type="password" id="loginPass" name="password" class="form-control auth-input"
+                        placeholder="Contraseña" required>
 
-                    <button
-                        type="button"
-                        class="btn btn-outline-secondary"
-                        onclick="togglePassword()">
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
 
                         <i class="bi bi-eye-fill"></i>
 
@@ -167,18 +177,11 @@
 
                 <!-- RECORDAR -->
 
-                <div
-                    id="recordarContainer"
-                    class="form-check mb-3">
+                <div id="recordarContainer" class="form-check mb-3">
 
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="recordarSesion">
+                    <input class="form-check-input" type="checkbox" id="recordarSesion">
 
-                    <label
-                        class="form-check-label"
-                        for="recordarSesion">
+                    <label class="form-check-label" for="recordarSesion">
 
                         Recordar sesión
 
@@ -188,13 +191,9 @@
 
                 <!-- RECUPERAR -->
 
-                <div
-                    id="recuperarContainer"
-                    class="text-end mb-3">
+                <div id="recuperarContainer" class="text-end mb-3">
 
-                    <a href="#"
-                       class="small text-decoration-none"
-                       onclick="mostrarRecuperarPassword()">
+                    <a href="#" class="small text-decoration-none" onclick="mostrarRecuperarPassword()">
 
                         ¿Olvidaste tu contraseña?
 
@@ -212,7 +211,7 @@
 
             <!-- REGISTRO CLIENTE -->
 
-            <form id="registerForm" style="display:none;">
+            <form id="registerForm" method="post" th:action="@{/registro}" style="display:none;">
 
                 <div class="input-group mb-3">
 
@@ -220,12 +219,8 @@
                         <i class="bi bi-person-fill"></i>
                     </span>
 
-                    <input
-                        type="text"
-                        id="regNombre"
-                        class="form-control auth-input"
-                        placeholder="Nombres y apellidos"
-                        required>
+                    <input type="text" id="regNombre" name="nombre" class="form-control auth-input"
+                        placeholder="Nombres y apellidos" required>
 
                 </div>
 
@@ -235,12 +230,8 @@
                         <i class="bi bi-envelope-fill"></i>
                     </span>
 
-                    <input
-                        type="email"
-                        id="regCorreo"
-                        class="form-control auth-input"
-                        placeholder="Correo electrónico"
-                        required>
+                    <input type="email" id="regCorreo" name="correo" class="form-control auth-input"
+                        placeholder="Correo electrónico" required>
 
                 </div>
 
@@ -250,10 +241,7 @@
                         <i class="bi bi-telephone-fill"></i>
                     </span>
 
-                    <input
-                        type="text"
-                        id="regTelefono"
-                        class="form-control auth-input"
+                    <input type="text" id="regTelefono" name="telefono" class="form-control auth-input"
                         placeholder="Teléfono">
 
                 </div>
@@ -264,12 +252,8 @@
                         <i class="bi bi-lock-fill"></i>
                     </span>
 
-                    <input
-                        type="password"
-                        id="regPass"
-                        class="form-control auth-input"
-                        placeholder="Contraseña"
-                        required>
+                    <input type="password" id="regPass" name="password" class="form-control auth-input"
+                        placeholder="Contraseña" required>
 
                 </div>
 
@@ -279,12 +263,8 @@
                         <i class="bi bi-shield-lock-fill"></i>
                     </span>
 
-                    <input
-                        type="password"
-                        id="regPass2"
-                        class="form-control auth-input"
-                        placeholder="Confirmar contraseña"
-                        required>
+                    <input type="password" id="regPass2" class="form-control auth-input"
+                        placeholder="Confirmar contraseña" required>
 
                 </div>
 
@@ -306,10 +286,7 @@
                         <i class="bi bi-envelope-fill"></i>
                     </span>
 
-                    <input
-                        type="email"
-                        id="recoverCorreo"
-                        class="form-control auth-input"
+                    <input type="email" id="recoverCorreo" class="form-control auth-input"
                         placeholder="Correo registrado">
 
                 </div>
@@ -324,17 +301,12 @@
 
             <!-- MENSAJES -->
 
-            <p id="mensaje"
-               class="text-center mt-3 fw-bold"
-               style="display:none;">
+            <p id="mensaje" class="text-center mt-3 fw-bold" style="display:none;">
             </p>
 
             <!-- TOGGLE -->
 
-            <button
-                class="btn btn-link text-decoration-none mt-2"
-                onclick="toggleAuth()"
-                id="toggleBtn">
+            <button class="btn btn-link text-decoration-none mt-2" onclick="toggleAuth()" id="toggleBtn">
 
                 ¿No tienes cuenta? Regístrate
 
@@ -345,15 +317,11 @@
     </div>
 
 </div>
-    <section th:fragment="mapa" class="py-0">
+<section th:fragment="mapa" class="py-0">
 
     <iframe
         src="https://maps.google.com/maps?q=Av.%2027%20de%20Diciembre%201200%20Villa%20Maria%20del%20Triunfo&t=&z=16&ie=UTF8&iwloc=&output=embed"
-        width="100%"
-        height="350"
-        style="border:0;"
-        allowfullscreen=""
-        loading="lazy">
+        width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy">
     </iframe>
 
 </section>
@@ -380,28 +348,28 @@
                         class="social-icon"><i class="bi bi-instagram"></i></a>
                 </div>
             </div>
-          <div class="col-lg-4 col-md-6">
+            <div class="col-lg-4 col-md-6">
 
-    <h6>Ubicación</h6>
+                <h6>Ubicación</h6>
 
-    <p class="text-white-50 mb-2">
-        <i class="bi bi-geo-alt-fill me-2"></i>
-        Paradero 20 de Av. 27 de Diciembre 1200,
-        Villa María del Triunfo 15818
-    </p>
+                <p class="text-white-50 mb-2">
+                    <i class="bi bi-geo-alt-fill me-2"></i>
+                    Paradero 20 de Av. 27 de Diciembre 1200,
+                    Villa María del Triunfo 15818
+                </p>
 
-    <p class="text-white-50 mb-2">
-        <i class="bi bi-clock-fill me-2"></i>
-        Lunes a Sábado
-        9:30 a.m. - 20:00 p.m.
-    </p>
+                <p class="text-white-50 mb-2">
+                    <i class="bi bi-clock-fill me-2"></i>
+                    Lunes a Sábado
+                    9:30 a.m. - 20:00 p.m.
+                </p>
 
-    <p class="text-white-50">
-        <i class="bi bi-telephone-fill me-2"></i>
-        +51 977 182 608
-    </p>
+                <p class="text-white-50">
+                    <i class="bi bi-telephone-fill me-2"></i>
+                    +51 977 182 608
+                </p>
 
-</div>
+            </div>
         </div>
         <hr class="footer-hr">
         <div class="text-center footer-bottom">
