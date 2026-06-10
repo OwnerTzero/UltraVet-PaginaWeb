@@ -1,7 +1,10 @@
 package com.ultravet.veterinaria.controller;
 
+import com.ultravet.veterinaria.dto.LoginForm;
+import com.ultravet.veterinaria.dto.RegistroUsuarioForm;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -18,5 +21,24 @@ public class GlobalModelAttributes {
         }
 
         return requestUri;
+    }
+
+    @ModelAttribute
+    public void authForms(Model model) {
+        if (!model.containsAttribute("loginForm")) {
+            model.addAttribute("loginForm", new LoginForm());
+        }
+
+        if (!model.containsAttribute("registroUsuarioForm")) {
+            model.addAttribute("registroUsuarioForm", new RegistroUsuarioForm());
+        }
+
+        if (!model.containsAttribute("abrirAuthModal")) {
+            model.addAttribute("abrirAuthModal", false);
+        }
+
+        if (!model.containsAttribute("authMode")) {
+            model.addAttribute("authMode", "login");
+        }
     }
 }

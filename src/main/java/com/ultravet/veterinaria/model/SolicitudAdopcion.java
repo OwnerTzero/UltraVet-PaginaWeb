@@ -41,7 +41,7 @@ public class SolicitudAdopcion extends AuditableEntity {
     @Column(name = "experiencia_mascotas", length = 80)
     private String experienciaMascotas;
 
-    @Column(name = "fecha_envio", nullable = false)
+    @Column(name = "fecha_envio")
     private LocalDateTime fechaEnvio;
 
     public Long getId() {

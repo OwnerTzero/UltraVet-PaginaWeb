@@ -1,20 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
     iniciarFiltrosServicios();
     iniciarDetalleServicios();
-    iniciarMisCitas();
     iniciarFormularioCitas();
+    iniciarDetalleCitas();
 });
 
-const CITAS_STORAGE_KEY = "ultravetCitas";
-
-function normalizarTexto(texto) {
+function normalizarTexto(texto = "") {
     return texto
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
 }
 
-function escaparHTML(texto) {
+function escaparHTML(texto = "") {
     const contenedor = document.createElement("div");
     contenedor.textContent = texto;
     return contenedor.innerHTML;
@@ -55,7 +53,7 @@ function iniciarFiltrosServicios() {
             categoria.classList.toggle("d-none", !tieneServiciosVisibles);
         });
 
-        sinResultados.classList.toggle("d-none", visibles > 0);
+        sinResultados?.classList.toggle("d-none", visibles > 0);
     }
 
     botonesFiltro.forEach((boton) => {
@@ -78,7 +76,6 @@ function iniciarDetalleServicios() {
     const duracion = document.getElementById("detalleServicioDuracion");
     const precio = document.getElementById("detalleServicioPrecio");
     const reservar = document.getElementById("btnReservarDesdeDetalle");
-    const tipoSelect = document.getElementById("cotizaTipo");
     const servicioSelect = document.getElementById("cotizaServicio");
     const detalleModal = document.getElementById("modalDetalleServicio");
     const citaModal = document.getElementById("modalCotizar");
@@ -100,14 +97,8 @@ function iniciarDetalleServicios() {
         });
     });
 
-    reservar.addEventListener("click", () => {
-        if (servicioSelect && servicioSeleccionado) {
-            servicioSelect.value = servicioSeleccionado;
-        }
-
-        if (tipoSelect) {
-            tipoSelect.value = "Cita veterinaria";
-        }
+    reservar?.addEventListener("click", () => {
+        seleccionarServicioPorNombre(servicioSelect, servicioSeleccionado);
 
         const modalDetalle = bootstrap.Modal.getOrCreateInstance(detalleModal);
         const modalCita = bootstrap.Modal.getOrCreateInstance(citaModal);
@@ -117,14 +108,28 @@ function iniciarDetalleServicios() {
     });
 }
 
+function seleccionarServicioPorNombre(select, nombre) {
+    if (!select || !nombre) {
+        return;
+    }
+
+    const objetivo = normalizarTexto(nombre);
+    const opcion = Array.from(select.options).find((item) => {
+        const texto = normalizarTexto(item.textContent.trim());
+        return texto.startsWith(objetivo);
+    });
+
+    if (opcion) {
+        select.value = opcion.value;
+    }
+}
+
 function iniciarFormularioCitas() {
     const formulario = document.getElementById("formCotizar");
     const fecha = document.getElementById("cotizaFecha");
-    const resumen = document.getElementById("resumenCotizacion");
     const modalCotizar = document.getElementById("modalCotizar");
-    const modalConfirmacion = document.getElementById("modalConfirmacionCita");
 
-    if (!formulario || !fecha || !resumen) {
+    if (!formulario || !fecha) {
         return;
     }
 
@@ -134,201 +139,52 @@ function iniciarFormularioCitas() {
     fecha.min = `${hoy.getFullYear()}-${mes}-${dia}`;
 
     formulario.addEventListener("submit", (event) => {
-        event.preventDefault();
-
         if (!formulario.checkValidity()) {
-            formulario.classList.add("was-validated");
-            return;
+            event.preventDefault();
+            event.stopPropagation();
         }
 
-        const datos = {
-            id: `cita-${Date.now()}`,
-            tipoSolicitud: document.getElementById("cotizaTipo").value,
-            nombre: document.getElementById("cotizaNombre").value.trim(),
-            correo: document.getElementById("cotizaCorreo").value.trim(),
-            telefono: document.getElementById("cotizaTelefono").value.trim(),
-            mascota: document.getElementById("cotizaMascota").value.trim(),
-            servicio: document.getElementById("cotizaServicio").value,
-            fecha: document.getElementById("cotizaFecha").value,
-            hora: document.getElementById("cotizaHora").value,
-            comentario: document.getElementById("cotizaComentario").value.trim(),
-            estado: "Pendiente",
-            creadaEn: new Date().toISOString()
-        };
-
-        guardarCita(datos);
-        renderizarCitas();
-
-        resumen.innerHTML = crearResumenCita(datos);
-
-        modalCotizar.addEventListener("hidden.bs.modal", () => {
-            bootstrap.Modal.getOrCreateInstance(modalConfirmacion).show();
-            formulario.reset();
-            formulario.classList.remove("was-validated");
-        }, { once: true });
-
-        modalConfirmacion.addEventListener("hidden.bs.modal", () => {
-            document.getElementById("misCitas")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, { once: true });
-
-        bootstrap.Modal.getOrCreateInstance(modalCotizar).hide();
+        formulario.classList.add("was-validated");
     });
+
+    if (document.body.dataset.openCitaModal === "true" && modalCotizar) {
+        formulario.classList.add("was-validated");
+        bootstrap.Modal.getOrCreateInstance(modalCotizar).show();
+    }
 }
 
-function iniciarMisCitas() {
+function iniciarDetalleCitas() {
     const tabla = document.getElementById("tablaCitasBody");
-    const limpiarBtn = document.getElementById("limpiarCitasBtn");
+    const contenido = document.getElementById("detalleCitaContenido");
+    const titulo = document.getElementById("detalleCitaTitulo");
+    const modal = document.getElementById("modalDetalleCita");
 
-    if (!tabla) {
+    if (!tabla || !contenido || !titulo || !modal) {
         return;
     }
 
     tabla.addEventListener("click", (event) => {
-        const boton = event.target.closest("[data-cita-accion]");
+        const boton = event.target.closest("[data-cita-accion='detalle']");
 
         if (!boton) {
             return;
         }
 
-        const citaId = boton.dataset.citaId;
-        const accion = boton.dataset.citaAccion;
-
-        if (accion === "detalle") {
-            mostrarDetalleCita(citaId);
-        }
-
-        if (accion === "cancelar") {
-            cancelarCita(citaId);
-        }
+        const cita = boton.dataset;
+        titulo.textContent = `${cita.servicio || "Cita"} - ${cita.mascota || "Mascota"}`;
+        contenido.innerHTML = crearResumenCita(cita);
+        bootstrap.Modal.getOrCreateInstance(modal).show();
     });
-
-    if (limpiarBtn) {
-        limpiarBtn.addEventListener("click", () => {
-            const citasActivas = obtenerCitas().filter((cita) => cita.estado !== "Cancelada");
-            guardarCitas(citasActivas);
-            renderizarCitas();
-        });
-    }
-
-    renderizarCitas();
-}
-
-function obtenerCitas() {
-    try {
-        return JSON.parse(localStorage.getItem(CITAS_STORAGE_KEY)) || [];
-    } catch {
-        return [];
-    }
-}
-
-function guardarCitas(citas) {
-    localStorage.setItem(CITAS_STORAGE_KEY, JSON.stringify(citas));
-}
-
-function guardarCita(cita) {
-    const citas = obtenerCitas();
-    citas.unshift(cita);
-    guardarCitas(citas);
-}
-
-function renderizarCitas() {
-    const tabla = document.getElementById("tablaCitasBody");
-    const tablaWrap = document.getElementById("tablaCitasWrap");
-    const vacias = document.getElementById("citasVacias");
-
-    if (!tabla || !tablaWrap || !vacias) {
-        return;
-    }
-
-    const citas = obtenerCitas();
-    const hayCitas = citas.length > 0;
-
-    tablaWrap.classList.toggle("d-none", !hayCitas);
-    vacias.classList.toggle("d-none", hayCitas);
-
-    tabla.innerHTML = citas.map((cita) => `
-        <tr>
-            <td>${escaparHTML(cita.mascota)}</td>
-            <td>${escaparHTML(cita.tipoSolicitud || "Cita veterinaria")}</td>
-            <td>${escaparHTML(cita.servicio)}</td>
-            <td>${escaparHTML(formatearFecha(cita.fecha))}</td>
-            <td>${escaparHTML(cita.hora)}</td>
-            <td><span class="appointment-status ${obtenerClaseEstado(cita.estado)}">${escaparHTML(cita.estado)}</span></td>
-            <td class="text-end">
-                <div class="appointment-actions">
-                    <button type="button" class="btn btn-sm btn-outline-primary"
-                        data-cita-accion="detalle" data-cita-id="${escaparHTML(cita.id)}">
-                        Ver
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-danger"
-                        data-cita-accion="cancelar" data-cita-id="${escaparHTML(cita.id)}"
-                        ${cita.estado === "Cancelada" ? "disabled" : ""}>
-                        Cancelar
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `).join("");
-}
-
-function mostrarDetalleCita(citaId) {
-    const cita = obtenerCitas().find((item) => item.id === citaId);
-    const contenido = document.getElementById("detalleCitaContenido");
-    const titulo = document.getElementById("detalleCitaTitulo");
-    const modal = document.getElementById("modalDetalleCita");
-
-    if (!cita || !contenido || !titulo || !modal) {
-        return;
-    }
-
-    titulo.textContent = `${cita.tipoSolicitud || "Solicitud"}: ${cita.servicio}`;
-    contenido.innerHTML = crearResumenCita(cita);
-    bootstrap.Modal.getOrCreateInstance(modal).show();
-}
-
-function cancelarCita(citaId) {
-    const citas = obtenerCitas().map((cita) => {
-        if (cita.id === citaId) {
-            return { ...cita, estado: "Cancelada" };
-        }
-
-        return cita;
-    });
-
-    guardarCitas(citas);
-    renderizarCitas();
 }
 
 function crearResumenCita(cita) {
     return `
-        <p><strong>Cliente:</strong> ${escaparHTML(cita.nombre)}</p>
-        <p><strong>Tipo:</strong> ${escaparHTML(cita.tipoSolicitud || "Cita veterinaria")}</p>
+        <p><strong>Cliente:</strong> ${escaparHTML(cita.cliente)}</p>
         <p><strong>Mascota:</strong> ${escaparHTML(cita.mascota)}</p>
         <p><strong>Servicio:</strong> ${escaparHTML(cita.servicio)}</p>
-        <p><strong>Fecha y hora:</strong> ${escaparHTML(formatearFecha(cita.fecha))} ${escaparHTML(cita.hora)}</p>
-        <p><strong>Contacto:</strong> ${escaparHTML(cita.telefono)} / ${escaparHTML(cita.correo)}</p>
+        <p><strong>Fecha y hora:</strong> ${escaparHTML(cita.fecha)} ${escaparHTML(cita.hora)}</p>
+        <p><strong>Contacto:</strong> ${escaparHTML(cita.contacto)}</p>
         <p><strong>Estado:</strong> ${escaparHTML(cita.estado)}</p>
         ${cita.comentario ? `<p><strong>Comentario:</strong> ${escaparHTML(cita.comentario)}</p>` : ""}
     `;
-}
-
-function obtenerClaseEstado(estado) {
-    if (estado === "Cancelada") {
-        return "text-bg-secondary";
-    }
-
-    if (estado === "Confirmada") {
-        return "text-bg-success";
-    }
-
-    return "text-bg-warning";
-}
-
-function formatearFecha(fecha) {
-    if (!fecha || !fecha.includes("-")) {
-        return fecha || "";
-    }
-
-    const [anio, mes, dia] = fecha.split("-");
-    return `${dia}/${mes}/${anio}`;
 }

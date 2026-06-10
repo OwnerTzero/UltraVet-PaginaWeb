@@ -72,7 +72,8 @@
     </div>
 </nav>
 
-<div th:fragment="auth-modal" class="modal fade" id="authModal" tabindex="-1">
+<div th:fragment="auth-modal" class="modal fade" id="authModal" tabindex="-1"
+    th:attr="data-open=${abrirAuthModal},data-mode=${authMode}">
 
     <div class="modal-dialog modal-dialog-centered">
 
@@ -95,11 +96,20 @@
 
             </div>
 
+            <div th:if="${authSuccess}" class="alert alert-success py-2">
+                <span th:text="${authSuccess}">Operacion realizada correctamente.</span>
+            </div>
+
+            <div th:if="${authError}" class="alert alert-danger py-2">
+                <span th:text="${authError}">Revisa tus datos.</span>
+            </div>
+
             <!-- TABS -->
             <ul class="nav nav-pills nav-justified mb-4" id="authTabs">
 
                 <li class="nav-item">
-                    <button class="nav-link active" id="clienteTab" type="button"
+                    <button class="nav-link" th:classappend="${loginForm.tipoAcceso != 'ADMIN' ? ' active' : ''}"
+                        id="clienteTab" type="button"
                         onclick="cambiarTipoAcceso('CLIENTE')">
 
                         Cliente
@@ -108,7 +118,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <button class="nav-link" id="adminTab" type="button" onclick="cambiarTipoAcceso('ADMIN')">
+                    <button class="nav-link" th:classappend="${loginForm.tipoAcceso == 'ADMIN' ? ' active' : ''}"
+                        id="adminTab" type="button" onclick="cambiarTipoAcceso('ADMIN')">
 
                         Administrador
 
@@ -119,53 +130,64 @@
 
             <!-- LOGIN -->
 
-            <form id="loginForm" method="post" th:action="@{/login}">
+            <form id="loginForm" method="post" th:action="@{/login}" th:object="${loginForm}" novalidate
+                th:style="${authMode == 'registro' ? 'display:none;' : ''}">
 
-                <input type="hidden" id="tipoAcceso" value="CLIENTE">
+                <input type="hidden" id="tipoAcceso" th:field="*{tipoAcceso}">
+
+                <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger py-2">
+                    <div th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                </div>
 
                 <!-- CLIENTE -->
-                <div id="clienteLogin">
+                <div id="clienteLogin" th:style="${loginForm.tipoAcceso == 'ADMIN' ? 'display:none;' : ''}">
 
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-1">
 
                         <span class="input-group-text auth-icon">
                             <i class="bi bi-envelope-fill"></i>
                         </span>
 
-                        <input type="email" id="loginCorreo" name="correo" class="form-control auth-input"
-                            placeholder="Correo electrónico" required>
+                        <input type="email" class="form-control auth-input" th:field="*{correo}"
+                            th:errorclass="is-invalid" placeholder="Correo electronico">
 
                     </div>
+
+                    <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('correo')}"
+                        th:errors="*{correo}"></div>
 
                 </div>
 
                 <!-- ADMIN -->
 
-                <div id="adminLogin" style="display:none;">
+                <div id="adminLogin" th:style="${loginForm.tipoAcceso == 'ADMIN' ? '' : 'display:none;'}">
 
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-1">
 
                         <span class="input-group-text auth-icon">
                             <i class="bi bi-person-badge-fill"></i>
                         </span>
 
-                        <input type="text" id="loginDni" class="form-control auth-input" placeholder="DNI"
-                            maxlength="8">
+                        <input type="text" class="form-control auth-input" th:field="*{dni}"
+                            th:errorclass="is-invalid" placeholder="DNI" maxlength="8">
 
                     </div>
+
+                    <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('dni')}"
+                        th:errors="*{dni}"></div>
 
                 </div>
 
                 <!-- PASSWORD -->
 
-                <div class="input-group mb-3">
+                <div class="input-group mb-1">
 
                     <span class="input-group-text auth-icon">
                         <i class="bi bi-lock-fill"></i>
                     </span>
 
-                    <input type="password" id="loginPass" name="password" class="form-control auth-input"
-                        placeholder="Contraseña" required>
+                    <input type="password" class="form-control auth-input" th:field="*{password}"
+                        th:errorclass="is-invalid" placeholder="Contrasena">
 
                     <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
 
@@ -175,25 +197,14 @@
 
                 </div>
 
-                <!-- RECORDAR -->
-
-                <div id="recordarContainer" class="form-check mb-3">
-
-                    <input class="form-check-input" type="checkbox" id="recordarSesion">
-
-                    <label class="form-check-label" for="recordarSesion">
-
-                        Recordar sesión
-
-                    </label>
-
-                </div>
+                <div class="invalid-feedback d-block mb-3" th:if="${#fields.hasErrors('password')}"
+                    th:errors="*{password}"></div>
 
                 <!-- RECUPERAR -->
 
                 <div id="recuperarContainer" class="text-end mb-3">
 
-                    <a href="#" class="small text-decoration-none" onclick="mostrarRecuperarPassword()">
+                    <a href="#" class="small text-decoration-none" onclick="mostrarRecuperarPassword(); return false;">
 
                         ¿Olvidaste tu contraseña?
 
@@ -201,7 +212,7 @@
 
                 </div>
 
-                <button class="btn btn-hero w-100 auth-btn">
+                <button class="btn btn-hero w-100 auth-btn" type="submit">
 
                     Ingresar
 
@@ -211,29 +222,50 @@
 
             <!-- REGISTRO CLIENTE -->
 
-            <form id="registerForm" method="post" th:action="@{/registro}" style="display:none;">
+            <form id="registerForm" method="post" th:action="@{/registro}" th:object="${registroUsuarioForm}"
+                th:style="${authMode == 'registro' ? '' : 'display:none;'}" novalidate>
 
-                <div class="input-group mb-3">
+                <div class="input-group mb-1">
 
                     <span class="input-group-text auth-icon">
                         <i class="bi bi-person-fill"></i>
                     </span>
 
-                    <input type="text" id="regNombre" name="nombre" class="form-control auth-input"
-                        placeholder="Nombres y apellidos" required>
+                    <input type="text" class="form-control auth-input" th:field="*{nombre}"
+                        th:errorclass="is-invalid" placeholder="Nombres y apellidos">
 
                 </div>
 
-                <div class="input-group mb-3">
+                <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('nombre')}"
+                    th:errors="*{nombre}"></div>
+
+                <div class="input-group mb-1">
+
+                    <span class="input-group-text auth-icon">
+                        <i class="bi bi-person-vcard-fill"></i>
+                    </span>
+
+                    <input type="text" class="form-control auth-input" th:field="*{dni}"
+                        th:errorclass="is-invalid" placeholder="DNI" maxlength="8">
+
+                </div>
+
+                <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('dni')}"
+                    th:errors="*{dni}"></div>
+
+                <div class="input-group mb-1">
 
                     <span class="input-group-text auth-icon">
                         <i class="bi bi-envelope-fill"></i>
                     </span>
 
-                    <input type="email" id="regCorreo" name="correo" class="form-control auth-input"
-                        placeholder="Correo electrónico" required>
+                    <input type="email" class="form-control auth-input" th:field="*{correo}"
+                        th:errorclass="is-invalid" placeholder="Correo electronico">
 
                 </div>
+
+                <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('correo')}"
+                    th:errors="*{correo}"></div>
 
                 <div class="input-group mb-3">
 
@@ -241,10 +273,13 @@
                         <i class="bi bi-telephone-fill"></i>
                     </span>
 
-                    <input type="text" id="regTelefono" name="telefono" class="form-control auth-input"
-                        placeholder="Teléfono">
+                    <input type="text" class="form-control auth-input" th:field="*{telefono}"
+                        th:errorclass="is-invalid" placeholder="Telefono">
 
                 </div>
+
+                <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('telefono')}"
+                    th:errors="*{telefono}"></div>
 
                 <div class="input-group mb-3">
 
@@ -252,10 +287,13 @@
                         <i class="bi bi-lock-fill"></i>
                     </span>
 
-                    <input type="password" id="regPass" name="password" class="form-control auth-input"
-                        placeholder="Contraseña" required>
+                    <input type="password" class="form-control auth-input" th:field="*{password}"
+                        th:errorclass="is-invalid" placeholder="Contrasena">
 
                 </div>
+
+                <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('password')}"
+                    th:errors="*{password}"></div>
 
                 <div class="input-group mb-3">
 
@@ -263,12 +301,15 @@
                         <i class="bi bi-shield-lock-fill"></i>
                     </span>
 
-                    <input type="password" id="regPass2" class="form-control auth-input"
-                        placeholder="Confirmar contraseña" required>
+                    <input type="password" class="form-control auth-input" th:field="*{confirmPassword}"
+                        th:errorclass="is-invalid" placeholder="Confirmar contrasena">
 
                 </div>
 
-                <button class="btn btn-success w-100 auth-btn">
+                <div class="invalid-feedback d-block mb-3" th:if="${#fields.hasErrors('confirmPassword')}"
+                    th:errors="*{confirmPassword}"></div>
+
+                <button class="btn btn-success w-100 auth-btn" type="submit">
 
                     Crear cuenta
 
@@ -291,7 +332,7 @@
 
                 </div>
 
-                <button class="btn btn-warning w-100 auth-btn">
+                <button class="btn btn-warning w-100 auth-btn" type="submit">
 
                     Recuperar contraseña
 
@@ -306,7 +347,8 @@
 
             <!-- TOGGLE -->
 
-            <button class="btn btn-link text-decoration-none mt-2" onclick="toggleAuth()" id="toggleBtn">
+            <button class="btn btn-link text-decoration-none mt-2" onclick="toggleAuth()" id="toggleBtn"
+                th:text="${authMode == 'registro'} ? 'Ya tienes cuenta? Inicia sesion' : 'No tienes cuenta? Registrate'">
 
                 ¿No tienes cuenta? Regístrate
 

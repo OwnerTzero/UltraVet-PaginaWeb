@@ -1,1328 +1,1586 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Administrativo | UltraVet</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --uv-orange:      #f6931e;
+            --uv-orange: #f6931e;
             --uv-orange-dark: #ef7302;
-            --uv-brown:       #774f1d;
-            --uv-cream:       #fffef9;
-            --uv-offwhite:    #fafafa;
-            --uv-gray:        #7c7c7c;
-            --uv-dark-gray:   #4a494b;
-            --uv-black:       #262326;
-            --sidebar-w:      240px;
+            --uv-gray: #7c7c7c;
+            --uv-dark-gray: #4a494b;
+            --uv-black: #262326;
+            --uv-bg: #f4f4f8;
+            --sidebar-w: 244px;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Montserrat', sans-serif; background: #f4f4f8; color: var(--uv-black); display: flex; min-height: 100vh; }
 
-        /* ── SIDEBAR ── */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--uv-black);
+            background: var(--uv-bg);
+        }
+
+        .admin-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+
         .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
             width: var(--sidebar-w);
             background: #fff;
             border-right: 1px solid #ececec;
+            box-shadow: 2px 0 16px rgba(246, 147, 30, .07);
             display: flex;
             flex-direction: column;
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            z-index: 100;
-            box-shadow: 2px 0 16px rgba(246,147,30,.07);
+            z-index: 10;
         }
+
         .sidebar-brand {
-            padding: 1.5rem 1.4rem 1.2rem;
+            padding: 1.4rem 1.25rem 1.1rem;
             border-bottom: 1px solid #f0f0f0;
         }
-        .brand-logo-wrap {
-            background: linear-gradient(135deg, var(--uv-orange), var(--uv-orange-dark));
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 1.1rem;
-        }
-        .brand-name { font-size: 1.2rem; font-weight: 900; color: var(--uv-orange); }
-        .brand-sub  { font-size: .55rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--uv-gray); }
-        .sidebar-label {
-            font-size: .65rem; font-weight: 700; letter-spacing: 2px;
-            text-transform: uppercase; color: #bbb;
-            padding: 1.2rem 1.4rem .4rem;
-        }
-        .nav-item-admin {
-            display: flex; align-items: center; gap: .75rem;
-            padding: .7rem 1.4rem;
-            font-size: .87rem; font-weight: 600;
-            color: var(--uv-dark-gray);
-            cursor: pointer;
-            border-radius: 10px;
-            margin: .1rem .7rem;
-            transition: all .2s;
-            border: none; background: none; width: calc(100% - 1.4rem); text-align: left;
-        }
-        .nav-item-admin:hover { background: rgba(246,147,30,.08); color: var(--uv-orange); }
-        .nav-item-admin.active {
-            background: linear-gradient(135deg, var(--uv-orange), var(--uv-orange-dark));
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(246,147,30,.3);
-        }
-        .nav-item-admin i { font-size: 1.05rem; width: 20px; text-align: center; }
-        .sidebar-footer { margin-top: auto; padding: 1rem .7rem; border-top: 1px solid #f0f0f0; }
-        .btn-logout-admin {
-            display: flex; align-items: center; gap: .75rem;
-            padding: .7rem 1.4rem; font-size: .87rem; font-weight: 600;
-            color: #e53935; cursor: pointer; border-radius: 10px;
-            width: 100%; border: none; background: none; transition: all .2s;
-        }
-        .btn-logout-admin:hover { background: rgba(229,57,53,.08); }
 
-        /* ── MAIN ── */
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: linear-gradient(135deg, var(--uv-orange), var(--uv-orange-dark));
+        }
+
+        .brand-name {
+            font-size: 1.16rem;
+            font-weight: 900;
+            color: var(--uv-orange);
+        }
+
+        .brand-sub {
+            font-size: .58rem;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            color: var(--uv-gray);
+            text-transform: uppercase;
+        }
+
+        .sidebar-label {
+            padding: 1.1rem 1.25rem .35rem;
+            color: #aaa;
+            font-size: .66rem;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        .nav-admin {
+            display: flex;
+            align-items: center;
+            gap: .72rem;
+            padding: .72rem 1rem;
+            margin: .12rem .7rem;
+            color: var(--uv-dark-gray);
+            text-decoration: none;
+            font-size: .86rem;
+            font-weight: 700;
+            border-radius: 10px;
+        }
+
+        .nav-admin:hover,
+        .nav-admin.active {
+            color: #fff;
+            background: linear-gradient(135deg, var(--uv-orange), var(--uv-orange-dark));
+        }
+
+        .nav-admin i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 1rem .7rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .logout-link {
+            color: #dc2626;
+            text-decoration: none;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            padding: .72rem 1rem;
+            border-radius: 10px;
+        }
+
+        .logout-link:hover {
+            background: rgba(220, 38, 38, .08);
+        }
+
         .main-content {
             margin-left: var(--sidebar-w);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            width: calc(100% - var(--sidebar-w));
         }
+
         .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 5;
             background: #fff;
             border-bottom: 1px solid #ececec;
             padding: 1rem 2rem;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
         }
-        .topbar-title { font-size: 1.25rem; font-weight: 800; color: var(--uv-black); }
+
+        .topbar-title {
+            font-size: 1.18rem;
+            font-weight: 900;
+        }
+
         .topbar-user {
-            display: flex; align-items: center; gap: .6rem;
-            font-size: .85rem; font-weight: 600; color: var(--uv-dark-gray);
+            display: flex;
+            align-items: center;
+            gap: .62rem;
+            font-size: .86rem;
+            font-weight: 700;
+            color: var(--uv-dark-gray);
         }
-        .topbar-user .avatar {
-            width: 36px; height: 36px; border-radius: 50%;
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #fff;
             background: linear-gradient(135deg, var(--uv-orange), var(--uv-orange-dark));
-            color: #fff; display: flex; align-items: center; justify-content: center;
-            font-size: 1rem;
         }
-        .page-body { padding: 2rem; flex: 1; }
 
-        /* ── VISTAS ── */
-        .vista { display: none; }
-        .vista.active { display: block; }
-
-        /* ── STAT CARDS ── */
-        .stat-card {
-            background: #fff;
-            border-radius: 16px;
-            padding: 1.4rem 1.6rem;
-            box-shadow: 0 2px 12px rgba(0,0,0,.05);
-            border-left: 4px solid var(--uv-orange);
-            transition: transform .2s, box-shadow .2s;
+        .page-body {
+            padding: 2rem;
         }
-        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(246,147,30,.15); }
-        .stat-card .stat-icon {
-            width: 44px; height: 44px; border-radius: 12px;
-            background: rgba(246,147,30,.1);
-            display: flex; align-items: center; justify-content: center;
-            color: var(--uv-orange); font-size: 1.3rem; margin-bottom: .8rem;
-        }
-        .stat-card .stat-num { font-size: 2rem; font-weight: 900; color: var(--uv-black); }
-        .stat-card .stat-label { font-size: .78rem; font-weight: 600; color: var(--uv-gray); text-transform: uppercase; letter-spacing: .5px; }
 
-        /* ── SECTION BOX ── */
-        .section-box {
-            background: #fff;
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 12px rgba(0,0,0,.05);
+        .section-block {
+            scroll-margin-top: 90px;
             margin-bottom: 1.5rem;
         }
-        .section-title { font-size: 1rem; font-weight: 800; color: var(--uv-black); }
-        .page-title { font-size: 1.5rem; font-weight: 900; color: var(--uv-black); margin-bottom: 1.5rem; }
 
-        /* ── TABLE ── */
-        .table { font-size: .87rem; }
+        .page-title {
+            font-size: 1.48rem;
+            font-weight: 900;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.35rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+            border: 1px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: .98rem;
+            font-weight: 900;
+            margin-bottom: .95rem;
+        }
+
+        .stat-card {
+            min-height: 132px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid #f0f0f0;
+            border-left: 4px solid var(--uv-orange);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            color: var(--uv-orange-dark);
+            background: rgba(246, 147, 30, .12);
+            margin-bottom: .72rem;
+        }
+
+        .stat-num {
+            font-size: 1.9rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .stat-label {
+            margin-top: .35rem;
+            color: var(--uv-gray);
+            font-size: .74rem;
+            font-weight: 800;
+            letter-spacing: .35px;
+            text-transform: uppercase;
+        }
+
+        .table {
+            font-size: .84rem;
+            margin-bottom: 0;
+        }
+
         .table thead th {
-            font-weight: 700; font-size: .78rem; text-transform: uppercase;
-            letter-spacing: .5px; color: var(--uv-gray);
-            border-bottom: 2px solid #f0f0f0; padding: .9rem 1rem;
+            color: var(--uv-gray);
+            font-size: .72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+            border-bottom: 2px solid #f0f0f0;
+            white-space: nowrap;
         }
-        .table tbody td { padding: .85rem 1rem; vertical-align: middle; border-bottom: 1px solid #f8f8f8; }
-        .table tbody tr:hover { background: rgba(246,147,30,.03); }
 
-        /* ── BADGES ── */
+        .table tbody td {
+            vertical-align: middle;
+            border-bottom: 1px solid #f7f7f7;
+        }
+
+        .table tbody tr:hover {
+            background: rgba(246, 147, 30, .035);
+        }
+
         .badge-estado {
-            padding: .35rem .8rem; border-radius: 50px; font-size: .73rem; font-weight: 700;
-        }
-        .badge-disponible { background: rgba(34,197,94,.12); color: #16a34a; }
-        .badge-proceso    { background: rgba(234,179,8,.12);  color: #ca8a04; }
-        .badge-adoptado   { background: rgba(99,102,241,.12); color: #4f46e5; }
-        .badge-pendiente  { background: rgba(234,179,8,.12);  color: #ca8a04; }
-        .badge-aprobado   { background: rgba(34,197,94,.12);  color: #16a34a; }
-        .badge-rechazado  { background: rgba(239,68,68,.12);  color: #dc2626; }
-        .badge-cliente    { background: rgba(246,147,30,.12);  color: var(--uv-orange-dark); }
-        .badge-admin      { background: rgba(99,102,241,.12);  color: #4f46e5; }
-
-        /* ── BUTTONS ── */
-        .btn-orange {
-            background: linear-gradient(135deg, var(--uv-orange), var(--uv-orange-dark));
-            color: #fff; border: none; border-radius: 10px;
-            padding: .5rem 1.1rem; font-weight: 700; font-size: .83rem;
-            transition: all .2s; cursor: pointer;
-        }
-        .btn-orange:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(246,147,30,.35); color: #fff; }
-        .btn-outline-orange {
-            border: 2px solid var(--uv-orange); color: var(--uv-orange);
-            background: transparent; border-radius: 10px;
-            padding: .45rem 1rem; font-weight: 700; font-size: .83rem;
-            transition: all .2s; cursor: pointer;
-        }
-        .btn-outline-orange:hover { background: var(--uv-orange); color: #fff; }
-        .btn-danger-sm {
-            background: rgba(239,68,68,.1); color: #dc2626; border: none;
-            border-radius: 8px; padding: .35rem .7rem; font-size: .78rem;
-            font-weight: 700; transition: all .2s; cursor: pointer;
-        }
-        .btn-danger-sm:hover { background: #dc2626; color: #fff; }
-        .btn-edit-sm {
-            background: rgba(99,102,241,.1); color: #4f46e5; border: none;
-            border-radius: 8px; padding: .35rem .7rem; font-size: .78rem;
-            font-weight: 700; transition: all .2s; cursor: pointer;
-        }
-        .btn-edit-sm:hover { background: #4f46e5; color: #fff; }
-        .btn-approve-sm {
-            background: rgba(34,197,94,.1); color: #16a34a; border: none;
-            border-radius: 8px; padding: .35rem .7rem; font-size: .78rem;
-            font-weight: 700; transition: all .2s; cursor: pointer;
-        }
-        .btn-approve-sm:hover { background: #16a34a; color: #fff; }
-
-        /* ── MODAL ── */
-        .modal-content { border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
-        .modal-header { border-bottom: 1px solid #f0f0f0; padding: 1.4rem 1.6rem; }
-        .modal-title { font-weight: 800; }
-        .modal-footer { border-top: 1px solid #f0f0f0; }
-        .form-label { font-weight: 600; font-size: .85rem; color: var(--uv-dark-gray); }
-        .form-control, .form-select {
-            border-radius: 10px; border: 2px solid #ececec;
-            font-size: .87rem; padding: .6rem .9rem; transition: .2s;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: var(--uv-orange);
-            box-shadow: 0 0 0 3px rgba(246,147,30,.15);
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: .32rem .72rem;
+            font-size: .71rem;
+            font-weight: 900;
+            white-space: nowrap;
         }
 
-        /* ── SEARCH ── */
-        .search-wrap { position: relative; }
-        .search-wrap input { padding-left: 2.5rem; }
-        .search-wrap i { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%); color: #bbb; }
-
-        /* ── STATS CHART PLACEHOLDER ── */
-        .chart-bar-wrap { display: flex; align-items: flex-end; gap: .5rem; height: 120px; padding: 1rem 0 0; }
-        .chart-bar {
-            flex: 1; border-radius: 6px 6px 0 0;
-            background: linear-gradient(180deg, var(--uv-orange), var(--uv-orange-dark));
-            opacity: .85; transition: opacity .2s;
-            position: relative;
+        .estado-pendiente,
+        .estado-en_proceso {
+            color: #b45309;
+            background: rgba(245, 158, 11, .14);
         }
-        .chart-bar:hover { opacity: 1; }
-        .chart-bar span {
-            position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
-            font-size: .68rem; font-weight: 700; color: var(--uv-orange-dark); white-space: nowrap;
+
+        .estado-confirmada,
+        .estado-aprobada,
+        .estado-disponible,
+        .estado-pagado {
+            color: #15803d;
+            background: rgba(34, 197, 94, .14);
         }
-        .chart-labels { display: flex; gap: .5rem; margin-top: .5rem; }
-        .chart-labels span { flex: 1; text-align: center; font-size: .68rem; color: var(--uv-gray); font-weight: 600; }
 
-        /* ── CONFIG ── */
-        .config-card {
-            background: #fff; border-radius: 16px;
-            padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,.05);
-            margin-bottom: 1rem;
+        .estado-cancelada,
+        .estado-rechazada,
+        .estado-anulado {
+            color: #dc2626;
+            background: rgba(239, 68, 68, .14);
         }
-        .config-card h6 { font-weight: 800; margin-bottom: 1rem; color: var(--uv-black); }
 
-        /* ── EMPTY STATE ── */
-        .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--uv-gray); }
-        .empty-state i { font-size: 2.5rem; opacity: .3; display: block; margin-bottom: .7rem; }
-        .empty-state p { font-size: .87rem; font-weight: 600; }
-
-        /* ── TOAST ── */
-        .toast-uv {
-            position: fixed; bottom: 1.5rem; right: 1.5rem;
-            background: #fff; border-radius: 14px;
-            padding: 1rem 1.4rem; display: flex; align-items: center; gap: .7rem;
-            box-shadow: 0 8px 30px rgba(0,0,0,.12);
-            z-index: 9999; font-size: .87rem; font-weight: 600;
-            transform: translateY(100px); opacity: 0;
-            transition: all .35s cubic-bezier(.34,1.56,.64,1);
+        .estado-atendida,
+        .estado-adoptada,
+        .estado-registrada {
+            color: #4f46e5;
+            background: rgba(99, 102, 241, .14);
         }
-        .toast-uv.show { transform: translateY(0); opacity: 1; }
-        .toast-uv i { font-size: 1.2rem; color: #16a34a; }
-        .toast-uv.error i { color: #dc2626; }
 
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); }
-            .main-content { margin-left: 0; }
+        .empty-state {
+            padding: 1.6rem 1rem;
+            text-align: center;
+            color: var(--uv-gray);
+            font-size: .85rem;
+            font-weight: 700;
+        }
+
+        .search-input {
+            max-width: 280px;
+            border-radius: 10px;
+            border: 2px solid #ececec;
+            font-size: .84rem;
+        }
+
+        .muted {
+            color: var(--uv-gray);
+        }
+
+        .crud-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: .35rem;
+            white-space: nowrap;
+        }
+
+        .crud-actions .btn {
+            font-size: .76rem;
+            font-weight: 800;
+            border-radius: 8px;
+        }
+
+        .modal-title {
+            font-weight: 900;
+        }
+
+        .admin-form-label {
+            font-size: .72rem;
+            font-weight: 900;
+            color: var(--uv-gray);
+            text-transform: uppercase;
+            letter-spacing: .35px;
+        }
+
+        @media (max-width: 900px) {
+            .admin-shell {
+                display: block;
+            }
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main-content {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .page-body {
+                padding: 1rem;
+            }
+
+            .topbar {
+                padding: .9rem 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <div class="sidebar-brand d-flex align-items-center gap-2">
+                <div class="brand-logo"><i class="bi bi-heart-pulse-fill"></i></div>
+                <div>
+                    <div class="brand-name">UltraVet</div>
+                    <div class="brand-sub">Administrador</div>
+                </div>
+            </div>
 
-<!-- ══════════════════════════════════════
-     SIDEBAR
-══════════════════════════════════════ -->
-<aside class="sidebar">
-    <div class="sidebar-brand d-flex align-items-center gap-2">
-        <div class="brand-logo-wrap"><i class="bi bi-heart-pulse-fill"></i></div>
-        <div>
-            <div class="brand-name">UltraVet</div>
-            <div class="brand-sub">Administrador</div>
+            <div class="sidebar-label">Menu</div>
+            <a class="nav-admin active" href="#inicio"><i class="bi bi-grid-1x2-fill"></i> Inicio</a>
+            <a class="nav-admin" href="#citas"><i class="bi bi-calendar-check-fill"></i> Citas</a>
+            <a class="nav-admin" href="#adopciones"><i class="bi bi-heart-fill"></i> Adopciones</a>
+            <a class="nav-admin" href="#mascotas"><i class="bi bi-emoji-smile-fill"></i> Mascotas</a>
+            <a class="nav-admin" href="#servicios-admin"><i class="bi bi-scissors"></i> Servicios</a>
+            <a class="nav-admin" href="#clientes"><i class="bi bi-people-fill"></i> Clientes</a>
+            <a class="nav-admin" href="#pagos"><i class="bi bi-credit-card-2-front-fill"></i> Pagos</a>
+            <a class="nav-admin" href="#atenciones"><i class="bi bi-file-medical-fill"></i> Atenciones</a>
+
+            <div class="sidebar-footer">
+                <a class="logout-link" th:href="@{/logout}">
+                    <i class="bi bi-box-arrow-left"></i> Cerrar sesion
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-title">Panel Administrativo UltraVet</div>
+                <div class="topbar-user">
+                    <div class="avatar"><i class="bi bi-person-fill"></i></div>
+                    <span th:text="${session.usuarioNombre ?: 'Administrador'}">Administrador</span>
+                </div>
+            </div>
+
+            <div class="page-body">
+                <div th:if="${adminSuccess}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${adminSuccess}">Operacion realizada correctamente.</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+
+                <div th:if="${adminError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${adminError}">No se pudo completar la operacion.</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>
+
+                <section class="section-block" id="inicio">
+                    <div class="page-title">Resumen general</div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-xl-3">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
+                                <div class="stat-num" th:text="${totalCitas}">0</div>
+                                <div class="stat-label">Citas registradas</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-xl-3">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="bi bi-heart"></i></div>
+                                <div class="stat-num" th:text="${totalSolicitudes}">0</div>
+                                <div class="stat-label">Solicitudes adopcion</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-xl-3">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="bi bi-people"></i></div>
+                                <div class="stat-num" th:text="${totalClientes}">0</div>
+                                <div class="stat-label">Clientes activos</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-xl-3">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="bi bi-cash-coin"></i></div>
+                                <div class="stat-num" th:text="${'S/ ' + totalPagado}">S/ 0.00</div>
+                                <div class="stat-label">Total pagos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-xl-4">
+                            <div class="section-box h-100">
+                                <div class="section-title">Ultimas citas</div>
+                                <div class="empty-state" th:if="${#lists.isEmpty(ultimasCitas)}">
+                                    No hay citas registradas.
+                                </div>
+                                <div class="table-responsive" th:if="${!#lists.isEmpty(ultimasCitas)}">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Cliente</th>
+                                                <th>Servicio</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="cita : ${ultimasCitas}">
+                                                <td th:text="${cita.usuario.nombre}">Cliente</td>
+                                                <td th:text="${cita.servicio.nombre}">Servicio</td>
+                                                <td>
+                                                    <span class="badge-estado"
+                                                        th:classappend="${' estado-' + #strings.toLowerCase(cita.estado.nombre)}"
+                                                        th:text="${cita.estado.nombre}">PENDIENTE</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4">
+                            <div class="section-box h-100">
+                                <div class="section-title">Ultimas adopciones</div>
+                                <div class="empty-state" th:if="${#lists.isEmpty(ultimasSolicitudes)}">
+                                    No hay solicitudes de adopcion.
+                                </div>
+                                <div class="table-responsive" th:if="${!#lists.isEmpty(ultimasSolicitudes)}">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Usuario</th>
+                                                <th>Mascota</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="solicitud : ${ultimasSolicitudes}">
+                                                <td th:text="${solicitud.usuario.nombre}">Usuario</td>
+                                                <td th:text="${solicitud.mascota.nombre}">Mascota</td>
+                                                <td>
+                                                    <span class="badge-estado"
+                                                        th:classappend="${' estado-' + #strings.toLowerCase(solicitud.estado.nombre)}"
+                                                        th:text="${solicitud.estado.nombre}">PENDIENTE</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4">
+                            <div class="section-box h-100">
+                                <div class="section-title">Indicadores</div>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="fw-bold fs-4" th:text="${citasPendientes}">0</div>
+                                        <div class="muted small fw-bold">Citas pendientes</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="fw-bold fs-4" th:text="${solicitudesPendientes}">0</div>
+                                        <div class="muted small fw-bold">Adopciones pendientes</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="fw-bold fs-4" th:text="${totalMascotas}">0</div>
+                                        <div class="muted small fw-bold">Mascotas</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="fw-bold fs-4" th:text="${totalServicios}">0</div>
+                                        <div class="muted small fw-bold">Servicios</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="fw-bold fs-4" th:text="${totalPagos}">0</div>
+                                        <div class="muted small fw-bold">Pagos</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="fw-bold fs-4" th:text="${totalAtenciones}">0</div>
+                                        <div class="muted small fw-bold">Atenciones</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-block" id="citas">
+                    <div class="section-box">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="section-title mb-1">Citas</div>
+                                <div class="muted small fw-bold">Registros creados desde el formulario de servicios.</div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input class="form-control search-input" type="search" placeholder="Buscar cita..."
+                                    data-table-filter="tabla-citas">
+                                <button type="button" class="btn btn-sm btn-warning fw-bold"
+                                    data-admin-reset="formCita" data-bs-toggle="modal" data-bs-target="#modalCita">
+                                    <i class="bi bi-plus-lg"></i> Nueva
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(citas)}">No hay citas registradas.</div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(citas)}">
+                            <table class="table" id="tabla-citas">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Mascota</th>
+                                        <th>Servicio</th>
+                                        <th>Fecha</th>
+                                        <th>Hora</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="cita : ${citas}">
+                                        <td>
+                                            <div class="fw-bold" th:text="${cita.usuario.nombre}">Cliente</div>
+                                            <div class="muted small" th:text="${cita.usuario.correo}">correo</div>
+                                        </td>
+                                        <td th:text="${cita.mascota.nombre}">Mascota</td>
+                                        <td th:text="${cita.servicio.nombre}">Servicio</td>
+                                        <td th:text="${#temporals.format(cita.fecha, 'dd/MM/yyyy')}">10/06/2026</td>
+                                        <td th:text="${#temporals.format(cita.hora, 'HH:mm')}">10:00</td>
+                                        <td>
+                                            <span class="badge-estado"
+                                                th:classappend="${' estado-' + #strings.toLowerCase(cita.estado.nombre)}"
+                                                th:text="${cita.estado.nombre}">PENDIENTE</span>
+                                        </td>
+                                        <td>
+                                            <div class="crud-actions">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    data-admin-fill="formCita" data-bs-toggle="modal"
+                                                    data-bs-target="#modalCita"
+                                                    th:data-id="${cita.id}"
+                                                    th:data-usuario-id="${cita.usuario.id}"
+                                                    th:data-mascota-id="${cita.mascota.id}"
+                                                    th:data-servicio-id="${cita.servicio.id}"
+                                                    th:data-estado-id="${cita.estado.id}"
+                                                    th:data-fecha="${cita.fecha}"
+                                                    th:data-hora="${cita.hora}"
+                                                    th:data-comentario="${cita.comentario}">
+                                                    Editar
+                                                </button>
+                                                <form th:action="@{/admin/citas/{id}/eliminar(id=${cita.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        data-confirm-delete="Eliminar esta cita?">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-block" id="adopciones">
+                    <div class="section-box">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="section-title mb-1">Solicitudes de adopcion</div>
+                                <div class="muted small fw-bold">Solicitudes registradas desde la vista de adopcion.</div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input class="form-control search-input" type="search" placeholder="Buscar adopcion..."
+                                    data-table-filter="tabla-adopciones">
+                                <button type="button" class="btn btn-sm btn-warning fw-bold"
+                                    data-admin-reset="formSolicitud" data-bs-toggle="modal"
+                                    data-bs-target="#modalSolicitud">
+                                    <i class="bi bi-plus-lg"></i> Nueva
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(solicitudes)}">
+                            No hay solicitudes de adopcion.
+                        </div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(solicitudes)}">
+                            <table class="table" id="tabla-adopciones">
+                                <thead>
+                                    <tr>
+                                        <th>Solicitante</th>
+                                        <th>Mascota</th>
+                                        <th>Distrito</th>
+                                        <th>Experiencia</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="solicitud : ${solicitudes}">
+                                        <td>
+                                            <div class="fw-bold" th:text="${solicitud.usuario.nombre}">Usuario</div>
+                                            <div class="muted small" th:text="${solicitud.usuario.correo}">correo</div>
+                                        </td>
+                                        <td th:text="${solicitud.mascota.nombre}">Mascota</td>
+                                        <td th:text="${solicitud.distrito ?: '-'}">Distrito</td>
+                                        <td th:text="${solicitud.experienciaMascotas ?: '-'}">Experiencia</td>
+                                        <td th:text="${#temporals.format(solicitud.fechaEnvio, 'dd/MM/yyyy HH:mm')}">10/06/2026</td>
+                                        <td>
+                                            <span class="badge-estado"
+                                                th:classappend="${' estado-' + #strings.toLowerCase(solicitud.estado.nombre)}"
+                                                th:text="${solicitud.estado.nombre}">PENDIENTE</span>
+                                        </td>
+                                        <td>
+                                            <div class="crud-actions">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    data-admin-fill="formSolicitud" data-bs-toggle="modal"
+                                                    data-bs-target="#modalSolicitud"
+                                                    th:data-id="${solicitud.id}"
+                                                    th:data-usuario-id="${solicitud.usuario.id}"
+                                                    th:data-mascota-id="${solicitud.mascota.id}"
+                                                    th:data-estado-id="${solicitud.estado.id}"
+                                                    th:data-distrito="${solicitud.distrito}"
+                                                    th:data-experiencia-mascotas="${solicitud.experienciaMascotas}">
+                                                    Editar
+                                                </button>
+                                                <form th:action="@{/admin/solicitudes/{id}/eliminar(id=${solicitud.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        data-confirm-delete="Eliminar esta solicitud?">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-block" id="mascotas">
+                    <div class="section-box">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="section-title mb-1">Mascotas</div>
+                                <div class="muted small fw-bold">Mascotas registradas y publicadas en la aplicacion.</div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input class="form-control search-input" type="search" placeholder="Buscar mascota..."
+                                    data-table-filter="tabla-mascotas">
+                                <button type="button" class="btn btn-sm btn-warning fw-bold"
+                                    data-admin-reset="formMascota" data-bs-toggle="modal"
+                                    data-bs-target="#modalMascota">
+                                    <i class="bi bi-plus-lg"></i> Nueva
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(mascotas)}">No hay mascotas registradas.</div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(mascotas)}">
+                            <table class="table" id="tabla-mascotas">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                        <th>Raza</th>
+                                        <th>Dueno</th>
+                                        <th>Estado</th>
+                                        <th>Prioridad</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="mascota : ${mascotas}">
+                                        <td class="fw-bold" th:text="${mascota.nombre}">Mascota</td>
+                                        <td th:text="${mascota.tipo ?: '-'}">Tipo</td>
+                                        <td th:text="${mascota.raza ?: '-'}">Raza</td>
+                                        <td th:text="${mascota.usuario != null ? mascota.usuario.nombre : 'Disponible'}">Dueno</td>
+                                        <td>
+                                            <span class="badge-estado"
+                                                th:classappend="${' estado-' + #strings.toLowerCase(mascota.estado.nombre)}"
+                                                th:text="${mascota.estado.nombre}">DISPONIBLE</span>
+                                        </td>
+                                        <td th:text="${mascota.prioridad.nombre}">NORMAL</td>
+                                        <td>
+                                            <div class="crud-actions">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    data-admin-fill="formMascota" data-bs-toggle="modal"
+                                                    data-bs-target="#modalMascota"
+                                                    th:data-id="${mascota.id}"
+                                                    th:data-usuario-id="${mascota.usuario != null ? mascota.usuario.id : ''}"
+                                                    th:data-estado-id="${mascota.estado.id}"
+                                                    th:data-prioridad-id="${mascota.prioridad.id}"
+                                                    th:data-nombre="${mascota.nombre}"
+                                                    th:data-sexo="${mascota.sexo}"
+                                                    th:data-raza="${mascota.raza}"
+                                                    th:data-fecha-nacimiento="${mascota.fechaNacimiento}"
+                                                    th:data-tipo="${mascota.tipo}"
+                                                    th:data-descripcion="${mascota.descripcion}"
+                                                    th:data-ubicacion="${mascota.ubicacion}"
+                                                    th:data-url-imagen="${mascota.urlImagen}">
+                                                    Editar
+                                                </button>
+                                                <form th:action="@{/admin/mascotas/{id}/eliminar(id=${mascota.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        data-confirm-delete="Eliminar esta mascota?">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-block" id="servicios-admin">
+                    <div class="section-box">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="section-title mb-1">Servicios</div>
+                                <div class="muted small fw-bold">Catalogo precargado desde MySQL.</div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input class="form-control search-input" type="search" placeholder="Buscar servicio..."
+                                    data-table-filter="tabla-servicios">
+                                <button type="button" class="btn btn-sm btn-warning fw-bold"
+                                    data-admin-reset="formServicio" data-bs-toggle="modal"
+                                    data-bs-target="#modalServicio">
+                                    <i class="bi bi-plus-lg"></i> Nuevo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(servicios)}">No hay servicios registrados.</div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(servicios)}">
+                            <table class="table" id="tabla-servicios">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Categoria</th>
+                                        <th>Duracion</th>
+                                        <th>Precio</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="servicio : ${servicios}">
+                                        <td>
+                                            <div class="fw-bold" th:text="${servicio.nombre}">Servicio</div>
+                                            <div class="muted small" th:text="${servicio.descripcion ?: '-'}">Descripcion</div>
+                                        </td>
+                                        <td th:text="${servicio.categoria.nombre}">Categoria</td>
+                                        <td th:text="${servicio.duracionEstimada ?: '-'}">1 hora</td>
+                                        <td th:text="${'S/ ' + servicio.precio}">S/ 0.00</td>
+                                        <td>
+                                            <span class="badge-estado estado-confirmada"
+                                                th:text="${servicio.activo ? 'ACTIVO' : 'INACTIVO'}">ACTIVO</span>
+                                        </td>
+                                        <td>
+                                            <div class="crud-actions">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    data-admin-fill="formServicio" data-bs-toggle="modal"
+                                                    data-bs-target="#modalServicio"
+                                                    th:data-id="${servicio.id}"
+                                                    th:data-categoria-id="${servicio.categoria.id}"
+                                                    th:data-nombre="${servicio.nombre}"
+                                                    th:data-descripcion="${servicio.descripcion}"
+                                                    th:data-duracion-estimada="${servicio.duracionEstimada}"
+                                                    th:data-precio="${servicio.precio}">
+                                                    Editar
+                                                </button>
+                                                <form th:action="@{/admin/servicios/{id}/eliminar(id=${servicio.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        data-confirm-delete="Desactivar este servicio?">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-block" id="clientes">
+                    <div class="section-box">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="section-title mb-1">Usuarios y clientes</div>
+                                <div class="muted small fw-bold">Usuarios registrados en la tabla usuarios.</div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input class="form-control search-input" type="search" placeholder="Buscar usuario..."
+                                    data-table-filter="tabla-clientes">
+                                <button type="button" class="btn btn-sm btn-warning fw-bold"
+                                    data-admin-reset="formUsuario" data-bs-toggle="modal"
+                                    data-bs-target="#modalUsuario">
+                                    <i class="bi bi-plus-lg"></i> Nuevo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(usuarios)}">No hay usuarios registrados.</div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(usuarios)}">
+                            <table class="table" id="tabla-clientes">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Telefono</th>
+                                        <th>DNI</th>
+                                        <th>Rol</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="usuario : ${usuarios}">
+                                        <td class="fw-bold" th:text="${usuario.nombre}">Usuario</td>
+                                        <td th:text="${usuario.correo}">correo</td>
+                                        <td th:text="${usuario.telefono ?: '-'}">Telefono</td>
+                                        <td th:text="${usuario.dni ?: '-'}">DNI</td>
+                                        <td>
+                                            <span class="badge-estado estado-registrada"
+                                                th:text="${usuario.rol.nombre}">CLIENTE</span>
+                                        </td>
+                                        <td>
+                                            <div class="crud-actions">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    data-admin-fill="formUsuario" data-bs-toggle="modal"
+                                                    data-bs-target="#modalUsuario"
+                                                    th:data-id="${usuario.id}"
+                                                    th:data-rol-id="${usuario.rol.id}"
+                                                    th:data-nombre="${usuario.nombre}"
+                                                    th:data-correo="${usuario.correo}"
+                                                    th:data-dni="${usuario.dni}"
+                                                    th:data-sexo="${usuario.sexo}"
+                                                    th:data-telefono="${usuario.telefono}">
+                                                    Editar
+                                                </button>
+                                                <form th:action="@{/admin/usuarios/{id}/eliminar(id=${usuario.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        data-confirm-delete="Desactivar este usuario?">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-block" id="pagos">
+                    <div class="section-box">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="section-title mb-1">Pagos</div>
+                                <div class="muted small fw-bold">Pagos asociados a citas.</div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input class="form-control search-input" type="search" placeholder="Buscar pago..."
+                                    data-table-filter="tabla-pagos">
+                                <button type="button" class="btn btn-sm btn-warning fw-bold"
+                                    data-admin-reset="formPago" data-bs-toggle="modal" data-bs-target="#modalPago">
+                                    <i class="bi bi-plus-lg"></i> Nuevo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(pagos)}">No hay pagos registrados.</div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(pagos)}">
+                            <table class="table" id="tabla-pagos">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Cita</th>
+                                        <th>Metodo</th>
+                                        <th>Monto</th>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="pago : ${pagos}">
+                                        <td th:text="${pago.cita.usuario.nombre}">Cliente</td>
+                                        <td th:text="${pago.cita.servicio.nombre + ' / ' + pago.cita.mascota.nombre}">Cita</td>
+                                        <td th:text="${pago.metodoPago.nombre}">Metodo</td>
+                                        <td th:text="${'S/ ' + pago.monto}">S/ 0.00</td>
+                                        <td th:text="${pago.fechaPago != null ? #temporals.format(pago.fechaPago, 'dd/MM/yyyy HH:mm') : '-'}">-</td>
+                                        <td>
+                                            <span class="badge-estado"
+                                                th:classappend="${' estado-' + #strings.toLowerCase(pago.estadoPago.nombre)}"
+                                                th:text="${pago.estadoPago.nombre}">PENDIENTE</span>
+                                        </td>
+                                        <td>
+                                            <div class="crud-actions">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    data-admin-fill="formPago" data-bs-toggle="modal"
+                                                    data-bs-target="#modalPago"
+                                                    th:data-id="${pago.id}"
+                                                    th:data-cita-id="${pago.cita.id}"
+                                                    th:data-metodo-pago-id="${pago.metodoPago.id}"
+                                                    th:data-estado-pago-id="${pago.estadoPago.id}"
+                                                    th:data-monto="${pago.monto}"
+                                                    th:data-fecha-pago="${pago.fechaPago}">
+                                                    Editar
+                                                </button>
+                                                <form th:action="@{/admin/pagos/{id}/eliminar(id=${pago.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        data-confirm-delete="Eliminar este pago?">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-block" id="atenciones">
+                    <div class="section-box">
+                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <div class="section-title mb-1">Atenciones / historial medico</div>
+                                <div class="muted small fw-bold">Diagnostico y tratamiento generados desde citas atendidas.</div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input class="form-control search-input" type="search" placeholder="Buscar atencion..."
+                                    data-table-filter="tabla-atenciones">
+                                <button type="button" class="btn btn-sm btn-warning fw-bold"
+                                    data-admin-reset="formAtencion" data-bs-toggle="modal"
+                                    data-bs-target="#modalAtencion">
+                                    <i class="bi bi-plus-lg"></i> Nueva
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" th:if="${#lists.isEmpty(atenciones)}">No hay atenciones registradas.</div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(atenciones)}">
+                            <table class="table" id="tabla-atenciones">
+                                <thead>
+                                    <tr>
+                                        <th>Mascota</th>
+                                        <th>Servicio</th>
+                                        <th>Diagnostico</th>
+                                        <th>Tratamiento</th>
+                                        <th>Fecha</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="atencion : ${atenciones}">
+                                        <td>
+                                            <div class="fw-bold" th:text="${atencion.cita.mascota.nombre}">Mascota</div>
+                                            <div class="muted small" th:text="${atencion.cita.usuario.nombre}">Cliente</div>
+                                        </td>
+                                        <td th:text="${atencion.cita.servicio.nombre}">Servicio</td>
+                                        <td th:text="${atencion.diagnostico ?: '-'}">Diagnostico</td>
+                                        <td th:text="${atencion.tratamiento ?: '-'}">Tratamiento</td>
+                                        <td th:text="${#temporals.format(atencion.fechaRegistro, 'dd/MM/yyyy HH:mm')}">10/06/2026</td>
+                                        <td>
+                                            <div class="crud-actions">
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    data-admin-fill="formAtencion" data-bs-toggle="modal"
+                                                    data-bs-target="#modalAtencion"
+                                                    th:data-id="${atencion.id}"
+                                                    th:data-cita-id="${atencion.cita.id}"
+                                                    th:data-diagnostico="${atencion.diagnostico}"
+                                                    th:data-tratamiento="${atencion.tratamiento}"
+                                                    th:data-observaciones="${atencion.observaciones}"
+                                                    th:data-fecha-registro="${atencion.fechaRegistro}">
+                                                    Editar
+                                                </button>
+                                                <form th:action="@{/admin/atenciones/{id}/eliminar(id=${atencion.id})}"
+                                                    method="post">
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                        data-confirm-delete="Eliminar esta atencion?">
+                                                        Eliminar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="modalCita" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formCita" th:action="@{/admin/citas/guardar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gestionar cita</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Usuario</label>
+                                <select class="form-select" name="usuarioId" required>
+                                    <option value="">Selecciona un usuario</option>
+                                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                                        th:text="${usuario.nombre + ' - ' + usuario.correo}">Usuario</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Mascota</label>
+                                <select class="form-select" name="mascotaId" required>
+                                    <option value="">Selecciona una mascota</option>
+                                    <option th:each="mascota : ${mascotas}" th:value="${mascota.id}"
+                                        th:text="${mascota.nombre + ' / ' + (mascota.tipo ?: 'Mascota')}">Mascota</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Servicio</label>
+                                <select class="form-select" name="servicioId" required>
+                                    <option value="">Selecciona un servicio</option>
+                                    <option th:each="servicio : ${servicios}" th:value="${servicio.id}"
+                                        th:text="${servicio.nombre}">Servicio</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Estado</label>
+                                <select class="form-select" name="estadoId" required>
+                                    <option value="">Selecciona un estado</option>
+                                    <option th:each="estado : ${estadosCita}" th:value="${estado.id}"
+                                        th:text="${estado.nombre}">PENDIENTE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Fecha</label>
+                                <input class="form-control" type="date" name="fecha" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Hora</label>
+                                <input class="form-control" type="time" name="hora" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Comentario</label>
+                                <textarea class="form-control" name="comentario" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Guardar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div class="sidebar-label">Menú</div>
-
-    <button class="nav-item-admin active" onclick="mostrarVista('inicio', this)">
-        <i class="bi bi-grid-1x2-fill"></i> Inicio
-    </button>
-    <button class="nav-item-admin" onclick="mostrarVista('servicios', this)">
-        <i class="bi bi-scissors"></i> Servicios
-    </button>
-    <button class="nav-item-admin" onclick="mostrarVista('adopciones', this)">
-        <i class="bi bi-heart-fill"></i> Adopciones
-    </button>
-    <button class="nav-item-admin" onclick="mostrarVista('clientes', this)">
-        <i class="bi bi-people-fill"></i> Clientes
-    </button>
-    <button class="nav-item-admin" onclick="mostrarVista('estadisticas', this)">
-        <i class="bi bi-bar-chart-fill"></i> Estadísticas
-    </button>
-    <button class="nav-item-admin" onclick="mostrarVista('configuracion', this)">
-        <i class="bi bi-gear-fill"></i> Configuración
-    </button>
-
-    <div class="sidebar-footer">
-        <button class="btn-logout-admin" onclick="logout()">
-            <i class="bi bi-box-arrow-left"></i> Cerrar sesión
-        </button>
-    </div>
-</aside>
-
-<!-- ══════════════════════════════════════
-     MAIN
-══════════════════════════════════════ -->
-<div class="main-content">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-        <div class="topbar-title" id="topbarTitle">Panel Administrativo UltraVet</div>
-        <div class="topbar-user">
-            <div class="avatar"><i class="bi bi-person-fill"></i></div>
-            <span id="adminNombre">Administrador</span>
-        </div>
-    </div>
-
-    <div class="page-body">
-
-        <!-- ════════════════ INICIO ════════════════ -->
-        <div class="vista active" id="vista-inicio">
-            <div class="page-title">Panel Administrativo UltraVet</div>
-
-            <!-- Stat cards -->
-            <div class="row g-3 mb-4">
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="bi bi-scissors"></i></div>
-                        <div class="stat-num" id="dash-servicios">0</div>
-                        <div class="stat-label">Solicitudes de servicios</div>
+    <div class="modal fade" id="modalSolicitud" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formSolicitud" th:action="@{/admin/solicitudes/guardar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gestionar solicitud de adopcion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="bi bi-heart-fill"></i></div>
-                        <div class="stat-num" id="dash-adopciones">0</div>
-                        <div class="stat-label">Solicitudes de adopción</div>
-                    </div>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
-                        <div class="stat-num" id="dash-clientes">0</div>
-                        <div class="stat-label">Clientes registrados</div>
-                    </div>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="bi bi-eye-fill"></i></div>
-                        <div class="stat-num" id="dash-visitas">0</div>
-                        <div class="stat-label">Visitas al sitio web</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-3">
-                <!-- Últimas solicitudes servicios -->
-                <div class="col-lg-6">
-                    <div class="section-box">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="section-title">Solicitudes de Servicios</div>
-                            <button class="btn-outline-orange btn-sm" onclick="mostrarVista('servicios', document.querySelectorAll('.nav-item-admin')[1])">Ver todo</button>
-                        </div>
-                        <div id="dash-tabla-servicios">
-                            <div class="empty-state"><i class="bi bi-inbox"></i><p>No hay solicitudes registradas</p></div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Usuario</label>
+                                <select class="form-select" name="usuarioId" required>
+                                    <option value="">Selecciona un usuario</option>
+                                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                                        th:text="${usuario.nombre + ' - ' + usuario.correo}">Usuario</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Mascota</label>
+                                <select class="form-select" name="mascotaId" required>
+                                    <option value="">Selecciona una mascota</option>
+                                    <option th:each="mascota : ${mascotas}" th:value="${mascota.id}"
+                                        th:text="${mascota.nombre + ' / ' + mascota.estado.nombre}">Mascota</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Estado</label>
+                                <select class="form-select" name="estadoId" required>
+                                    <option value="">Selecciona un estado</option>
+                                    <option th:each="estado : ${estadosSolicitud}" th:value="${estado.id}"
+                                        th:text="${estado.nombre}">PENDIENTE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Experiencia</label>
+                                <select class="form-select" name="experienciaMascotas">
+                                    <option value="">Sin indicar</option>
+                                    <option value="SI">SI</option>
+                                    <option value="NO">NO</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Distrito</label>
+                                <input class="form-control" type="text" name="distrito" maxlength="120">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Últimas adopciones -->
-                <div class="col-lg-6">
-                    <div class="section-box">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="section-title">Solicitudes de Adopción</div>
-                            <button class="btn-outline-orange btn-sm" onclick="mostrarVista('adopciones', document.querySelectorAll('.nav-item-admin')[2])">Ver todo</button>
-                        </div>
-                        <div id="dash-tabla-adopciones">
-                            <div class="empty-state"><i class="bi bi-inbox"></i><p>No hay solicitudes registradas</p></div>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Guardar</button>
                     </div>
-                </div>
-                <!-- Mascotas disponibles -->
-                <div class="col-12">
-                    <div class="section-box">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="section-title">Mascotas Publicadas</div>
-                            <button class="btn-orange" onclick="mostrarVista('adopciones', document.querySelectorAll('.nav-item-admin')[2])">
-                                <i class="bi bi-plus-circle me-1"></i> Agregar Mascota
-                            </button>
-                        </div>
-                        <div id="dash-tabla-mascotas">
-                            <div class="empty-state"><i class="bi bi-emoji-smile"></i><p>No hay mascotas publicadas</p></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ════════════════ SERVICIOS ════════════════ -->
-        <div class="vista" id="vista-servicios">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="page-title mb-0">Gestión de Servicios</div>
-                <button class="btn-orange" onclick="abrirModalServicio()">
-                    <i class="bi bi-plus-circle me-1"></i> Nuevo Servicio
-                </button>
-            </div>
-
-            <!-- Catálogo de servicios -->
-            <div class="section-box mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="section-title">Catálogo de Servicios</div>
-                    <div class="search-wrap">
-                        <i class="bi bi-search"></i>
-                        <input type="text" class="form-control" placeholder="Buscar servicio..." id="searchServicio" oninput="filtrarServicios()" style="width:220px;">
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead><tr>
-                            <th>Nombre</th><th>Categoría</th><th>Precio</th><th>Duración</th><th>Estado</th><th>Acciones</th>
-                        </tr></thead>
-                        <tbody id="tabla-servicios-catalogo"></tbody>
-                    </table>
-                </div>
-                <div id="empty-servicios" class="empty-state" style="display:none;"><i class="bi bi-scissors"></i><p>No hay servicios registrados</p></div>
-            </div>
-
-            <!-- Solicitudes de servicios -->
-            <div class="section-box">
-                <div class="section-title mb-3">Solicitudes Recibidas</div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead><tr>
-                            <th>Cliente</th><th>Servicio</th><th>Fecha</th><th>Mascota</th><th>Estado</th><th>Acciones</th>
-                        </tr></thead>
-                        <tbody id="tabla-solicitudes-servicios"></tbody>
-                    </table>
-                </div>
-                <div id="empty-solicitudes-servicios" class="empty-state"><i class="bi bi-inbox"></i><p>No hay solicitudes registradas</p></div>
-            </div>
-        </div>
-
-        <!-- ════════════════ ADOPCIONES ════════════════ -->
-        <div class="vista" id="vista-adopciones">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="page-title mb-0">Gestión de Adopciones</div>
-                <button class="btn-orange" onclick="abrirModalMascota()">
-                    <i class="bi bi-plus-circle me-1"></i> Agregar Mascota
-                </button>
-            </div>
-
-            <!-- Mascotas -->
-            <div class="section-box mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="section-title">Mascotas Publicadas</div>
-                    <div class="search-wrap">
-                        <i class="bi bi-search"></i>
-                        <input type="text" class="form-control" placeholder="Buscar mascota..." id="searchMascota" oninput="filtrarMascotas()" style="width:220px;">
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead><tr>
-                            <th>Nombre</th><th>Raza</th><th>Edad</th><th>Tipo</th><th>Estado</th><th>Acciones</th>
-                        </tr></thead>
-                        <tbody id="tabla-mascotas"></tbody>
-                    </table>
-                </div>
-                <div id="empty-mascotas" class="empty-state" style="display:none;"><i class="bi bi-emoji-smile"></i><p>No hay mascotas publicadas</p></div>
-            </div>
-
-            <!-- Solicitudes adopción -->
-            <div class="section-box">
-                <div class="section-title mb-3">Solicitudes de Adopción</div>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead><tr>
-                            <th>Mascota</th><th>Solicitante</th><th>Correo</th><th>Teléfono</th><th>Fecha</th><th>Estado</th><th>Acciones</th>
-                        </tr></thead>
-                        <tbody id="tabla-solicitudes-adopcion"></tbody>
-                    </table>
-                </div>
-                <div id="empty-solicitudes-adopcion" class="empty-state"><i class="bi bi-inbox"></i><p>No hay solicitudes registradas</p></div>
-            </div>
-        </div>
-
-        <!-- ════════════════ CLIENTES ════════════════ -->
-        <div class="vista" id="vista-clientes">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="page-title mb-0">Gestión de Clientes</div>
-                <div class="search-wrap">
-                    <i class="bi bi-search"></i>
-                    <input type="text" class="form-control" placeholder="Buscar cliente..." id="searchCliente" oninput="filtrarClientes()" style="width:240px;">
-                </div>
-            </div>
-            <div class="section-box">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead><tr>
-                            <th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Tipo</th><th>Acciones</th>
-                        </tr></thead>
-                        <tbody id="tabla-clientes"></tbody>
-                    </table>
-                </div>
-                <div id="empty-clientes" class="empty-state"><i class="bi bi-people"></i><p>No hay clientes registrados</p></div>
-            </div>
-        </div>
-
-        <!-- ════════════════ ESTADÍSTICAS ════════════════ -->
-        <div class="vista" id="vista-estadisticas">
-            <div class="page-title">Estadísticas</div>
-
-            <div class="row g-3 mb-4">
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card"><div class="stat-icon"><i class="bi bi-scissors"></i></div>
-                        <div class="stat-num" id="est-servicios">0</div><div class="stat-label">Servicios publicados</div></div>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card"><div class="stat-icon"><i class="bi bi-heart-fill"></i></div>
-                        <div class="stat-num" id="est-mascotas">0</div><div class="stat-label">Mascotas publicadas</div></div>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card"><div class="stat-icon"><i class="bi bi-people-fill"></i></div>
-                        <div class="stat-num" id="est-clientes">0</div><div class="stat-label">Clientes registrados</div></div>
-                </div>
-                <div class="col-6 col-lg-3">
-                    <div class="stat-card"><div class="stat-icon"><i class="bi bi-check-circle-fill"></i></div>
-                        <div class="stat-num" id="est-adoptados">0</div><div class="stat-label">Adopciones aprobadas</div></div>
-                </div>
-            </div>
-
-            <div class="row g-3">
-                <div class="col-lg-6">
-                    <div class="section-box">
-                        <div class="section-title mb-1">Solicitudes de adopción por estado</div>
-                        <div class="chart-bar-wrap" id="chart-adopcion"></div>
-                        <div class="chart-labels" id="chart-adopcion-labels"></div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="section-box">
-                        <div class="section-title mb-1">Solicitudes de servicios por estado</div>
-                        <div class="chart-bar-wrap" id="chart-servicios"></div>
-                        <div class="chart-labels" id="chart-servicios-labels"></div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <div class="section-box">
-                        <div class="section-title mb-3">Resumen de actividad</div>
-                        <div id="resumen-actividad"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ════════════════ CONFIGURACIÓN ════════════════ -->
-        <div class="vista" id="vista-configuracion">
-            <div class="page-title">Configuración</div>
-
-            <!-- Datos admin -->
-            <div class="config-card">
-                <h6><i class="bi bi-person-gear me-2 text-warning"></i>Datos del Administrador</h6>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="cfg-nombre" placeholder="Nombre del administrador">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">DNI</label>
-                        <input type="text" class="form-control" id="cfg-dni" placeholder="DNI">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Nueva contraseña</label>
-                        <input type="password" class="form-control" id="cfg-pass" placeholder="Nueva contraseña">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Confirmar contraseña</label>
-                        <input type="password" class="form-control" id="cfg-pass2" placeholder="Confirmar contraseña">
-                    </div>
-                    <div class="col-12">
-                        <button class="btn-orange" onclick="guardarConfigAdmin()">
-                            <i class="bi bi-save me-1"></i> Guardar cambios
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Agregar admin -->
-            <div class="config-card">
-                <h6><i class="bi bi-person-plus me-2 text-warning"></i>Agregar Nuevo Administrador</h6>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nuevo-admin-nombre" placeholder="Nombre">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">DNI</label>
-                        <input type="text" class="form-control" id="nuevo-admin-dni" placeholder="DNI">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="nuevo-admin-pass" placeholder="Contraseña">
-                    </div>
-                    <div class="col-12">
-                        <button class="btn-orange" onclick="agregarAdmin()">
-                            <i class="bi bi-plus-circle me-1"></i> Agregar Administrador
-                        </button>
-                    </div>
-                </div>
-                <div class="mt-3" id="lista-admins"></div>
-            </div>
-
-            <!-- Limpiar datos -->
-            <div class="config-card">
-                <h6><i class="bi bi-trash me-2 text-danger"></i>Zona de Peligro</h6>
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-outline-danger btn-sm" onclick="limpiarDatos('solicitudesServicios')">Limpiar solicitudes de servicios</button>
-                    <button class="btn btn-outline-danger btn-sm" onclick="limpiarDatos('solicitudesAdopcion')">Limpiar solicitudes de adopción</button>
-                    <button class="btn btn-outline-danger btn-sm" onclick="limpiarDatos('usuarios')">Limpiar clientes</button>
-                    <button class="btn btn-outline-danger btn-sm" onclick="limpiarDatos('mascotas')">Limpiar mascotas</button>
-                    <button class="btn btn-outline-danger btn-sm" onclick="limpiarDatos('servicios')">Limpiar servicios</button>
-                </div>
-            </div>
-        </div>
-
-    </div><!-- /page-body -->
-</div><!-- /main-content -->
-
-<!-- ══════════════════════════════════════
-     MODALES
-══════════════════════════════════════ -->
-
-<!-- Modal Mascota -->
-<div class="modal fade" id="modalMascota" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalMascotaTitulo">Agregar Mascota</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="mascota-id">
-                <div class="row g-3">
-                    <div class="col-6"><label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="mascota-nombre" placeholder="Ej: Toby"></div>
-                    <div class="col-6"><label class="form-label">Raza</label>
-                        <input type="text" class="form-control" id="mascota-raza" placeholder="Ej: Corgi"></div>
-                    <div class="col-6"><label class="form-label">Edad</label>
-                        <input type="text" class="form-control" id="mascota-edad" placeholder="Ej: 2 años"></div>
-                    <div class="col-6"><label class="form-label">Tipo</label>
-                        <select class="form-select" id="mascota-tipo">
-                            <option>Perro</option><option>Gato</option><option>Conejo</option><option>Otro</option>
-                        </select></div>
-                    <div class="col-12"><label class="form-label">Descripción</label>
-                        <textarea class="form-control" id="mascota-descripcion" rows="2" placeholder="Descripción breve..."></textarea></div>
-                    <div class="col-6"><label class="form-label">Estado</label>
-                        <select class="form-select" id="mascota-estado">
-                            <option value="disponible">Disponible</option>
-                            <option value="proceso">En proceso</option>
-                            <option value="adoptado">Adoptado</option>
-                        </select></div>
-                    <div class="col-6"><label class="form-label">URL Imagen (opcional)</label>
-                        <input type="text" class="form-control" id="mascota-img" placeholder="https://..."></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn-orange" onclick="guardarMascota()">Guardar</button>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Servicio -->
-<div class="modal fade" id="modalServicio" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalServicioTitulo">Nuevo Servicio</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="servicio-id">
-                <div class="row g-3">
-                    <div class="col-12"><label class="form-label">Nombre del servicio</label>
-                        <input type="text" class="form-control" id="servicio-nombre" placeholder="Ej: Baño y corte"></div>
-                    <div class="col-6"><label class="form-label">Categoría</label>
-                        <select class="form-select" id="servicio-categoria">
-                            <option>Servicios Médicos</option><option>Cuidado y Estética</option><option>Prevención y Bienestar</option>
-                            <option>Otro</option>
-                        </select></div>
-                    <div class="col-6"><label class="form-label">Precio (S/.)</label>
-                        <input type="number" class="form-control" id="servicio-precio" placeholder="0.00"></div>
-                    <div class="col-6"><label class="form-label">Duración</label>
-                        <input type="text" class="form-control" id="servicio-duracion" placeholder="Ej: 1 hora"></div>
-                    <div class="col-6"><label class="form-label">Estado</label>
-                        <select class="form-select" id="servicio-estado">
-                            <option value="disponible">Disponible</option>
-                            <option value="no disponible">No disponible</option>
-                        </select></div>
-                    <div class="col-12"><label class="form-label">Descripción</label>
-                        <textarea class="form-control" id="servicio-descripcion" rows="2" placeholder="Descripción..."></textarea></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
-                <button class="btn-orange" onclick="guardarServicio()">Guardar</button>
+    <div class="modal fade" id="modalMascota" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formMascota" th:action="@{/admin/mascotas/guardar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gestionar mascota</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Nombre</label>
+                                <input class="form-control" type="text" name="nombre" maxlength="80" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Dueno</label>
+                                <select class="form-select" name="usuarioId">
+                                    <option value="">Disponible / sin dueno</option>
+                                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                                        th:text="${usuario.nombre + ' - ' + usuario.correo}">Usuario</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Estado</label>
+                                <select class="form-select" name="estadoId" required>
+                                    <option value="">Estado</option>
+                                    <option th:each="estado : ${estadosMascota}" th:value="${estado.id}"
+                                        th:text="${estado.nombre}">DISPONIBLE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Prioridad</label>
+                                <select class="form-select" name="prioridadId" required>
+                                    <option value="">Prioridad</option>
+                                    <option th:each="prioridad : ${prioridadesMascota}" th:value="${prioridad.id}"
+                                        th:text="${prioridad.nombre}">NORMAL</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Tipo</label>
+                                <input class="form-control" type="text" name="tipo" maxlength="50">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Sexo</label>
+                                <select class="form-select" name="sexo">
+                                    <option value="">Sin indicar</option>
+                                    <option value="MACHO">MACHO</option>
+                                    <option value="HEMBRA">HEMBRA</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Raza</label>
+                                <input class="form-control" type="text" name="raza" maxlength="80">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Fecha nacimiento</label>
+                                <input class="form-control" type="date" name="fechaNacimiento">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Ubicacion</label>
+                                <input class="form-control" type="text" name="ubicacion" maxlength="120">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">URL imagen</label>
+                                <input class="form-control" type="url" name="urlImagen" maxlength="500">
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Descripcion</label>
+                                <textarea class="form-control" name="descripcion" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Ver Cliente -->
-<div class="modal fade" id="modalCliente" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Detalle del Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="modal-cliente-body"></div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+    <div class="modal fade" id="modalServicio" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formServicio" th:action="@{/admin/servicios/guardar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gestionar servicio</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Nombre</label>
+                                <input class="form-control" type="text" name="nombre" maxlength="100" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Categoria</label>
+                                <select class="form-select" name="categoriaId" required>
+                                    <option value="">Selecciona una categoria</option>
+                                    <option th:each="categoria : ${categoriasServicio}" th:value="${categoria.id}"
+                                        th:text="${categoria.nombre}">MEDICOS</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Duracion estimada</label>
+                                <input class="form-control" type="text" name="duracionEstimada" maxlength="60">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Precio</label>
+                                <input class="form-control" type="number" step="0.01" min="0" name="precio" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Descripcion</label>
+                                <textarea class="form-control" name="descripcion" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Toast -->
-<div class="toast-uv" id="toast">
-    <i class="bi bi-check-circle-fill"></i>
-    <span id="toast-msg">Guardado correctamente</span>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-
-// ══════════════════════════════════════
-// UTILIDADES
-// ══════════════════════════════════════
-
-function toast(msg, error = false) {
-    const t = document.getElementById('toast');
-    document.getElementById('toast-msg').textContent = msg;
-    t.className = 'toast-uv' + (error ? ' error' : '');
-    t.querySelector('i').className = error ? 'bi bi-x-circle-fill' : 'bi bi-check-circle-fill';
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-function getId() { return Date.now().toString(); }
-
-function ls(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
-function lsSave(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
-
-function badgeEstado(estado) {
-    const map = {
-        disponible: 'badge-disponible', proceso: 'badge-proceso', adoptado: 'badge-adoptado',
-        pendiente: 'badge-pendiente', aprobado: 'badge-aprobado', rechazado: 'badge-rechazado',
-        'no disponible': 'badge-rechazado'
-    };
-    const cls = map[estado?.toLowerCase()] || 'badge-pendiente';
-    return `<span class="badge-estado ${cls}">${estado || 'Pendiente'}</span>`;
-}
-
-function logout() {
-    localStorage.removeItem('usuario'); localStorage.removeItem('tipoUsuario');
-    sessionStorage.removeItem('usuario'); sessionStorage.removeItem('tipoUsuario');
-    window.location.href = '/';
-}
-
-// ══════════════════════════════════════
-// NAVEGACIÓN
-// ══════════════════════════════════════
-
-function mostrarVista(id, btn) {
-    document.querySelectorAll('.vista').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-item-admin').forEach(b => b.classList.remove('active'));
-    document.getElementById('vista-' + id).classList.add('active');
-    if (btn) btn.classList.add('active');
-
-    const titulos = {
-        inicio: 'Panel Administrativo UltraVet',
-        servicios: 'Gestión de Servicios',
-        adopciones: 'Gestión de Adopciones',
-        clientes: 'Gestión de Clientes',
-        estadisticas: 'Estadísticas',
-        configuracion: 'Configuración'
-    };
-    document.getElementById('topbarTitle').textContent = titulos[id] || '';
-
-    if (id === 'inicio') renderInicio();
-    if (id === 'servicios') renderServicios();
-    if (id === 'adopciones') renderAdopciones();
-    if (id === 'clientes') renderClientes();
-    if (id === 'estadisticas') renderEstadisticas();
-    if (id === 'configuracion') renderConfiguracion();
-}
-
-// ══════════════════════════════════════
-// INICIO
-// ══════════════════════════════════════
-
-function renderInicio() {
-    const solicServ = ls('solicitudesServicios');
-    const solicAdop = ls('solicitudesAdopcion');
-    const clientes  = ls('usuarios');
-    const visitas   = parseInt(localStorage.getItem('visitas') || '0');
-
-    document.getElementById('dash-servicios').textContent  = solicServ.length;
-    document.getElementById('dash-adopciones').textContent = solicAdop.length;
-    document.getElementById('dash-clientes').textContent   = clientes.length;
-    document.getElementById('dash-visitas').textContent    = visitas;
-
-    // mini tabla servicios
-    const tS = document.getElementById('dash-tabla-servicios');
-    if (solicServ.length === 0) {
-        tS.innerHTML = '<div class="empty-state"><i class="bi bi-inbox"></i><p>No hay solicitudes registradas</p></div>';
-    } else {
-        const filas = solicServ.slice(-3).reverse().map(s => `
-            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <div><div class="fw-700" style="font-size:.85rem">${s.cliente}</div><div style="font-size:.75rem;color:#888">${s.servicio}</div></div>
-                ${badgeEstado(s.estado)}
-            </div>`).join('');
-        tS.innerHTML = filas;
-    }
-
-    // mini tabla adopciones
-    const tA = document.getElementById('dash-tabla-adopciones');
-    if (solicAdop.length === 0) {
-        tA.innerHTML = '<div class="empty-state"><i class="bi bi-inbox"></i><p>No hay solicitudes registradas</p></div>';
-    } else {
-        const filas = solicAdop.slice(-3).reverse().map(s => `
-            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <div><div class="fw-700" style="font-size:.85rem">${s.solicitante}</div><div style="font-size:.75rem;color:#888">${s.mascota}</div></div>
-                ${badgeEstado(s.estado)}
-            </div>`).join('');
-        tA.innerHTML = filas;
-    }
-
-    // tabla mascotas resumen
-    const mascotas = ls('mascotas');
-    const tM = document.getElementById('dash-tabla-mascotas');
-    if (mascotas.length === 0) {
-        tM.innerHTML = '<div class="empty-state"><i class="bi bi-emoji-smile"></i><p>No hay mascotas publicadas</p></div>';
-    } else {
-        tM.innerHTML = `<div class="table-responsive"><table class="table">
-            <thead><tr><th>Nombre</th><th>Raza</th><th>Tipo</th><th>Estado</th></tr></thead>
-            <tbody>${mascotas.slice(0,5).map(m => `<tr>
-                <td><strong>${m.nombre}</strong></td><td>${m.raza}</td><td>${m.tipo}</td>
-                <td>${badgeEstado(m.estado)}</td>
-            </tr>`).join('')}</tbody>
-        </table></div>`;
-    }
-}
-
-// ══════════════════════════════════════
-// SERVICIOS
-// ══════════════════════════════════════
-
-let servicioEditId = null;
-
-function renderServicios() {
-    const servicios = ls('servicios');
-    const solicitudes = ls('solicitudesServicios');
-
-    const tbody = document.getElementById('tabla-servicios-catalogo');
-    const empty = document.getElementById('empty-servicios');
-
-    if (servicios.length === 0) {
-        tbody.innerHTML = '';
-        empty.style.display = 'block';
-    } else {
-        empty.style.display = 'none';
-        tbody.innerHTML = servicios.map(s => `<tr>
-            <td><strong>${s.nombre}</strong></td>
-            <td>${s.categoria}</td>
-            <td>S/. ${parseFloat(s.precio||0).toFixed(2)}</td>
-            <td>${s.duracion || '-'}</td>
-            <td>${badgeEstado(s.estado)}</td>
-            <td class="d-flex gap-1">
-                <button class="btn-edit-sm" onclick="editarServicio('${s.id}')"><i class="bi bi-pencil"></i></button>
-                <button class="btn-danger-sm" onclick="eliminarServicio('${s.id}')"><i class="bi bi-trash"></i></button>
-            </td>
-        </tr>`).join('');
-    }
-
-    const tbodySol = document.getElementById('tabla-solicitudes-servicios');
-    const emptySol = document.getElementById('empty-solicitudes-servicios');
-    if (solicitudes.length === 0) {
-        tbodySol.innerHTML = '';
-        emptySol.style.display = 'block';
-    } else {
-        emptySol.style.display = 'none';
-        tbodySol.innerHTML = solicitudes.map(s => `<tr>
-            <td><strong>${s.cliente}</strong></td>
-            <td>${s.servicio}</td>
-            <td>${s.fecha || '-'}</td>
-            <td>${s.mascota || '-'}</td>
-            <td>${badgeEstado(s.estado)}</td>
-            <td class="d-flex gap-1">
-                <button class="btn-approve-sm" onclick="cambiarEstadoSolicitudServicio('${s.id}','aprobado')"><i class="bi bi-check"></i></button>
-                <button class="btn-danger-sm"  onclick="cambiarEstadoSolicitudServicio('${s.id}','rechazado')"><i class="bi bi-x"></i></button>
-                <button class="btn-danger-sm"  onclick="eliminarSolicitudServicio('${s.id}')"><i class="bi bi-trash"></i></button>
-            </td>
-        </tr>`).join('');
-    }
-}
-
-function abrirModalServicio() {
-    servicioEditId = null;
-    document.getElementById('modalServicioTitulo').textContent = 'Nuevo Servicio';
-    ['servicio-id','servicio-nombre','servicio-precio','servicio-duracion','servicio-descripcion'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('servicio-categoria').value = 'Grooming';
-    document.getElementById('servicio-estado').value = 'disponible';
-    new bootstrap.Modal(document.getElementById('modalServicio')).show();
-}
-
-function editarServicio(id) {
-    const s = ls('servicios').find(x => x.id === id);
-    if (!s) return;
-    servicioEditId = id;
-    document.getElementById('modalServicioTitulo').textContent = 'Editar Servicio';
-    document.getElementById('servicio-id').value          = s.id;
-    document.getElementById('servicio-nombre').value      = s.nombre;
-    document.getElementById('servicio-categoria').value   = s.categoria;
-    document.getElementById('servicio-precio').value      = s.precio;
-    document.getElementById('servicio-duracion').value    = s.duracion;
-    document.getElementById('servicio-estado').value      = s.estado;
-    document.getElementById('servicio-descripcion').value = s.descripcion;
-    new bootstrap.Modal(document.getElementById('modalServicio')).show();
-}
-
-function guardarServicio() {
-    const nombre = document.getElementById('servicio-nombre').value.trim();
-    if (!nombre) { toast('El nombre es obligatorio', true); return; }
-    let servicios = ls('servicios');
-    const data = {
-        nombre, precio: document.getElementById('servicio-precio').value,
-        categoria: document.getElementById('servicio-categoria').value,
-        duracion: document.getElementById('servicio-duracion').value,
-        estado: document.getElementById('servicio-estado').value,
-        descripcion: document.getElementById('servicio-descripcion').value
-    };
-    if (servicioEditId) {
-        servicios = servicios.map(s => s.id === servicioEditId ? { ...s, ...data } : s);
-        toast('Servicio actualizado');
-    } else {
-        servicios.push({ id: getId(), ...data });
-        toast('Servicio agregado');
-    }
-    lsSave('servicios', servicios);
-    bootstrap.Modal.getInstance(document.getElementById('modalServicio')).hide();
-    renderServicios();
-}
-
-function eliminarServicio(id) {
-    if (!confirm('¿Eliminar este servicio?')) return;
-    lsSave('servicios', ls('servicios').filter(s => s.id !== id));
-    toast('Servicio eliminado');
-    renderServicios();
-}
-
-function filtrarServicios() {
-    const q = document.getElementById('searchServicio').value.toLowerCase();
-    const servicios = ls('servicios').filter(s => s.nombre.toLowerCase().includes(q) || s.categoria.toLowerCase().includes(q));
-    document.getElementById('tabla-servicios-catalogo').innerHTML = servicios.map(s => `<tr>
-        <td><strong>${s.nombre}</strong></td><td>${s.categoria}</td>
-        <td>S/. ${parseFloat(s.precio||0).toFixed(2)}</td><td>${s.duracion||'-'}</td>
-        <td>${badgeEstado(s.estado)}</td>
-        <td class="d-flex gap-1">
-            <button class="btn-edit-sm" onclick="editarServicio('${s.id}')"><i class="bi bi-pencil"></i></button>
-            <button class="btn-danger-sm" onclick="eliminarServicio('${s.id}')"><i class="bi bi-trash"></i></button>
-        </td>
-    </tr>`).join('');
-}
-
-function cambiarEstadoSolicitudServicio(id, estado) {
-    let sol = ls('solicitudesServicios');
-    sol = sol.map(s => s.id === id ? { ...s, estado } : s);
-    lsSave('solicitudesServicios', sol);
-    toast(`Solicitud ${estado}`);
-    renderServicios();
-}
-
-function eliminarSolicitudServicio(id) {
-    if (!confirm('¿Eliminar esta solicitud?')) return;
-    lsSave('solicitudesServicios', ls('solicitudesServicios').filter(s => s.id !== id));
-    toast('Solicitud eliminada');
-    renderServicios();
-}
-
-// ══════════════════════════════════════
-// ADOPCIONES
-// ══════════════════════════════════════
-
-let mascotaEditId = null;
-
-function renderAdopciones() {
-    const mascotas  = ls('mascotas');
-    const solicitudes = ls('solicitudesAdopcion');
-
-    const tbody = document.getElementById('tabla-mascotas');
-    const empty = document.getElementById('empty-mascotas');
-    if (mascotas.length === 0) {
-        tbody.innerHTML = ''; empty.style.display = 'block';
-    } else {
-        empty.style.display = 'none';
-        tbody.innerHTML = mascotas.map(m => `<tr>
-            <td><strong>${m.nombre}</strong></td><td>${m.raza}</td><td>${m.edad}</td>
-            <td>${m.tipo}</td><td>${badgeEstado(m.estado)}</td>
-            <td class="d-flex gap-1">
-                <button class="btn-edit-sm" onclick="editarMascota('${m.id}')"><i class="bi bi-pencil"></i></button>
-                <button class="btn-danger-sm" onclick="eliminarMascota('${m.id}')"><i class="bi bi-trash"></i></button>
-            </td>
-        </tr>`).join('');
-    }
-
-    const tbodySol = document.getElementById('tabla-solicitudes-adopcion');
-    const emptySol = document.getElementById('empty-solicitudes-adopcion');
-    if (solicitudes.length === 0) {
-        tbodySol.innerHTML = ''; emptySol.style.display = 'block';
-    } else {
-        emptySol.style.display = 'none';
-        tbodySol.innerHTML = solicitudes.map(s => `<tr>
-            <td><strong>${s.mascota}</strong></td><td>${s.solicitante}</td>
-            <td>${s.correo||'-'}</td><td>${s.telefono||'-'}</td>
-            <td>${s.fecha||'-'}</td><td>${badgeEstado(s.estado)}</td>
-            <td class="d-flex gap-1">
-                <button class="btn-approve-sm" onclick="cambiarEstadoAdopcion('${s.id}','aprobado')"><i class="bi bi-check"></i></button>
-                <button class="btn-danger-sm"  onclick="cambiarEstadoAdopcion('${s.id}','rechazado')"><i class="bi bi-x"></i></button>
-                <button class="btn-danger-sm"  onclick="eliminarSolicitudAdopcion('${s.id}')"><i class="bi bi-trash"></i></button>
-            </td>
-        </tr>`).join('');
-    }
-}
-
-function abrirModalMascota() {
-    mascotaEditId = null;
-    document.getElementById('modalMascotaTitulo').textContent = 'Agregar Mascota';
-    ['mascota-id','mascota-nombre','mascota-raza','mascota-edad','mascota-descripcion','mascota-img'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('mascota-tipo').value   = 'Perro';
-    document.getElementById('mascota-estado').value = 'disponible';
-    new bootstrap.Modal(document.getElementById('modalMascota')).show();
-}
-
-function editarMascota(id) {
-    const m = ls('mascotas').find(x => x.id === id);
-    if (!m) return;
-    mascotaEditId = id;
-    document.getElementById('modalMascotaTitulo').textContent = 'Editar Mascota';
-    document.getElementById('mascota-id').value          = m.id;
-    document.getElementById('mascota-nombre').value      = m.nombre;
-    document.getElementById('mascota-raza').value        = m.raza;
-    document.getElementById('mascota-edad').value        = m.edad;
-    document.getElementById('mascota-tipo').value        = m.tipo;
-    document.getElementById('mascota-descripcion').value = m.descripcion;
-    document.getElementById('mascota-estado').value      = m.estado;
-    document.getElementById('mascota-img').value         = m.img || '';
-    new bootstrap.Modal(document.getElementById('modalMascota')).show();
-}
-
-function guardarMascota() {
-    const nombre = document.getElementById('mascota-nombre').value.trim();
-    if (!nombre) { toast('El nombre es obligatorio', true); return; }
-    let mascotas = ls('mascotas');
-    const data = {
-        nombre, raza: document.getElementById('mascota-raza').value,
-        edad: document.getElementById('mascota-edad').value,
-        tipo: document.getElementById('mascota-tipo').value,
-        descripcion: document.getElementById('mascota-descripcion').value,
-        estado: document.getElementById('mascota-estado').value,
-        img: document.getElementById('mascota-img').value
-    };
-    if (mascotaEditId) {
-        mascotas = mascotas.map(m => m.id === mascotaEditId ? { ...m, ...data } : m);
-        toast('Mascota actualizada');
-    } else {
-        mascotas.push({ id: getId(), ...data });
-        toast('Mascota agregada');
-    }
-    lsSave('mascotas', mascotas);
-    bootstrap.Modal.getInstance(document.getElementById('modalMascota')).hide();
-    renderAdopciones();
-}
-
-function eliminarMascota(id) {
-    if (!confirm('¿Eliminar esta mascota?')) return;
-    lsSave('mascotas', ls('mascotas').filter(m => m.id !== id));
-    toast('Mascota eliminada');
-    renderAdopciones();
-}
-
-function filtrarMascotas() {
-    const q = document.getElementById('searchMascota').value.toLowerCase();
-    const mascotas = ls('mascotas').filter(m => m.nombre.toLowerCase().includes(q) || m.raza.toLowerCase().includes(q));
-    document.getElementById('tabla-mascotas').innerHTML = mascotas.map(m => `<tr>
-        <td><strong>${m.nombre}</strong></td><td>${m.raza}</td><td>${m.edad}</td>
-        <td>${m.tipo}</td><td>${badgeEstado(m.estado)}</td>
-        <td class="d-flex gap-1">
-            <button class="btn-edit-sm" onclick="editarMascota('${m.id}')"><i class="bi bi-pencil"></i></button>
-            <button class="btn-danger-sm" onclick="eliminarMascota('${m.id}')"><i class="bi bi-trash"></i></button>
-        </td>
-    </tr>`).join('');
-}
-
-function cambiarEstadoAdopcion(id, estado) {
-    let sol = ls('solicitudesAdopcion');
-    sol = sol.map(s => s.id === id ? { ...s, estado } : s);
-    lsSave('solicitudesAdopcion', sol);
-    toast(`Solicitud ${estado}`);
-    renderAdopciones();
-}
-
-function eliminarSolicitudAdopcion(id) {
-    if (!confirm('¿Eliminar esta solicitud?')) return;
-    lsSave('solicitudesAdopcion', ls('solicitudesAdopcion').filter(s => s.id !== id));
-    toast('Solicitud eliminada');
-    renderAdopciones();
-}
-
-// ══════════════════════════════════════
-// CLIENTES
-// ══════════════════════════════════════
-
-function renderClientes() {
-    const clientes = ls('usuarios');
-    const tbody = document.getElementById('tabla-clientes');
-    const empty = document.getElementById('empty-clientes');
-    if (clientes.length === 0) {
-        tbody.innerHTML = ''; empty.style.display = 'block';
-    } else {
-        empty.style.display = 'none';
-        tbody.innerHTML = clientes.map((c, i) => `<tr>
-            <td><strong>${c.nombre}</strong></td>
-            <td>${c.correo}</td>
-            <td>${c.telefono || '-'}</td>
-            <td><span class="badge-estado badge-cliente">Cliente</span></td>
-            <td class="d-flex gap-1">
-                <button class="btn-edit-sm" onclick="verCliente(${i})"><i class="bi bi-eye"></i></button>
-                <button class="btn-danger-sm" onclick="eliminarCliente(${i})"><i class="bi bi-trash"></i></button>
-            </td>
-        </tr>`).join('');
-    }
-}
-
-function verCliente(idx) {
-    const c = ls('usuarios')[idx];
-    document.getElementById('modal-cliente-body').innerHTML = `
-        <div class="row g-3">
-            <div class="col-6"><div class="form-label">Nombre</div><div class="fw-700">${c.nombre}</div></div>
-            <div class="col-6"><div class="form-label">Correo</div><div>${c.correo}</div></div>
-            <div class="col-6"><div class="form-label">Teléfono</div><div>${c.telefono || '-'}</div></div>
-            <div class="col-6"><div class="form-label">Tipo</div><span class="badge-estado badge-cliente">Cliente</span></div>
-        </div>`;
-    new bootstrap.Modal(document.getElementById('modalCliente')).show();
-}
-
-function eliminarCliente(idx) {
-    if (!confirm('¿Eliminar este cliente?')) return;
-    let usuarios = ls('usuarios');
-    usuarios.splice(idx, 1);
-    lsSave('usuarios', usuarios);
-    toast('Cliente eliminado');
-    renderClientes();
-}
-
-function filtrarClientes() {
-    const q = document.getElementById('searchCliente').value.toLowerCase();
-    const clientes = ls('usuarios').filter(c =>
-        c.nombre.toLowerCase().includes(q) || c.correo.toLowerCase().includes(q)
-    );
-    document.getElementById('tabla-clientes').innerHTML = clientes.map((c, i) => `<tr>
-        <td><strong>${c.nombre}</strong></td><td>${c.correo}</td><td>${c.telefono||'-'}</td>
-        <td><span class="badge-estado badge-cliente">Cliente</span></td>
-        <td class="d-flex gap-1">
-            <button class="btn-edit-sm" onclick="verCliente(${i})"><i class="bi bi-eye"></i></button>
-            <button class="btn-danger-sm" onclick="eliminarCliente(${i})"><i class="bi bi-trash"></i></button>
-        </td>
-    </tr>`).join('');
-}
-
-// ══════════════════════════════════════
-// ESTADÍSTICAS
-// ══════════════════════════════════════
-
-function renderEstadisticas() {
-    const servicios   = ls('servicios');
-    const mascotas    = ls('mascotas');
-    const clientes    = ls('usuarios');
-    const solicAdop   = ls('solicitudesAdopcion');
-    const solicServ   = ls('solicitudesServicios');
-    const adoptados   = solicAdop.filter(s => s.estado === 'aprobado').length;
-
-    document.getElementById('est-servicios').textContent = servicios.length;
-    document.getElementById('est-mascotas').textContent  = mascotas.length;
-    document.getElementById('est-clientes').textContent  = clientes.length;
-    document.getElementById('est-adoptados').textContent = adoptados;
-
-    // Gráfica adopciones
-    renderChart('chart-adopcion', 'chart-adopcion-labels', solicAdop,
-        ['pendiente','aprobado','rechazado'], ['Pendiente','Aprobado','Rechazado']);
-
-    // Gráfica servicios
-    renderChart('chart-servicios', 'chart-servicios-labels', solicServ,
-        ['pendiente','aprobado','rechazado'], ['Pendiente','Aprobado','Rechazado']);
-
-    // Resumen
-    document.getElementById('resumen-actividad').innerHTML = `
-        <div class="row g-3 text-center">
-            <div class="col-4"><div style="font-size:1.6rem;font-weight:900;color:var(--uv-orange)">${servicios.length}</div><div style="font-size:.78rem;color:#888;font-weight:600">Servicios</div></div>
-            <div class="col-4"><div style="font-size:1.6rem;font-weight:900;color:var(--uv-orange)">${mascotas.length}</div><div style="font-size:.78rem;color:#888;font-weight:600">Mascotas</div></div>
-            <div class="col-4"><div style="font-size:1.6rem;font-weight:900;color:var(--uv-orange)">${clientes.length}</div><div style="font-size:.78rem;color:#888;font-weight:600">Clientes</div></div>
-            <div class="col-4"><div style="font-size:1.6rem;font-weight:900;color:#16a34a">${adoptados}</div><div style="font-size:.78rem;color:#888;font-weight:600">Adoptados</div></div>
-            <div class="col-4"><div style="font-size:1.6rem;font-weight:900;color:#ca8a04">${solicAdop.filter(s=>s.estado==='pendiente').length}</div><div style="font-size:.78rem;color:#888;font-weight:600">Pend. adopción</div></div>
-            <div class="col-4"><div style="font-size:1.6rem;font-weight:900;color:#4f46e5">${solicServ.length}</div><div style="font-size:.78rem;color:#888;font-weight:600">Solic. servicios</div></div>
-        </div>`;
-}
-
-function renderChart(chartId, labelsId, data, estados, etiquetas) {
-    const conteo = estados.map(e => data.filter(d => (d.estado||'pendiente') === e).length);
-    const max = Math.max(...conteo, 1);
-    document.getElementById(chartId).innerHTML = conteo.map((c, i) => `
-        <div class="chart-bar" style="height:${Math.max((c/max)*100, 6)}%">
-            <span>${c}</span>
-        </div>`).join('');
-    document.getElementById(labelsId).innerHTML = `<div class="chart-labels">
-        ${etiquetas.map(e => `<span>${e}</span>`).join('')}
-    </div>`;
-}
-
-// ══════════════════════════════════════
-// CONFIGURACIÓN
-// ══════════════════════════════════════
-
-function renderConfiguracion() {
-    const admins = ls('admins');
-    const adminActual = admins[0];
-    if (adminActual) {
-        document.getElementById('cfg-nombre').value = adminActual.nombre || '';
-        document.getElementById('cfg-dni').value    = adminActual.dni || '';
-    }
-    renderListaAdmins();
-}
-
-function renderListaAdmins() {
-    const admins = ls('admins');
-    document.getElementById('lista-admins').innerHTML = admins.length === 0 ? '' : `
-        <div class="mt-2"><div class="form-label mb-2">Administradores registrados</div>
-        <div class="table-responsive"><table class="table"><thead><tr><th>Nombre</th><th>DNI</th><th>Acciones</th></tr></thead>
-        <tbody>${admins.map((a,i) => `<tr>
-            <td><strong>${a.nombre}</strong></td><td>${a.dni}</td>
-            <td>${i === 0 ? '<span style="font-size:.75rem;color:#888">Admin principal</span>' :
-            `<button class="btn-danger-sm" onclick="eliminarAdmin(${i})"><i class="bi bi-trash"></i></button>`}</td>
-        </tr>`).join('')}</tbody></table></div></div>`;
-}
-
-function guardarConfigAdmin() {
-    const nombre = document.getElementById('cfg-nombre').value.trim();
-    const dni    = document.getElementById('cfg-dni').value.trim();
-    const pass   = document.getElementById('cfg-pass').value.trim();
-    const pass2  = document.getElementById('cfg-pass2').value.trim();
-    if (!nombre || !dni) { toast('Nombre y DNI son obligatorios', true); return; }
-    if (pass && pass !== pass2) { toast('Las contraseñas no coinciden', true); return; }
-    let admins = ls('admins');
-    admins[0] = { ...admins[0], nombre, dni, ...(pass ? { pass } : {}) };
-    lsSave('admins', admins);
-    localStorage.setItem('usuario', nombre);
-    document.getElementById('adminNombre').textContent = nombre;
-    toast('Datos guardados correctamente');
-}
-
-function agregarAdmin() {
-    const nombre = document.getElementById('nuevo-admin-nombre').value.trim();
-    const dni    = document.getElementById('nuevo-admin-dni').value.trim();
-    const pass   = document.getElementById('nuevo-admin-pass').value.trim();
-    if (!nombre || !dni || !pass) { toast('Todos los campos son obligatorios', true); return; }
-    let admins = ls('admins');
-    if (admins.find(a => a.dni === dni)) { toast('Ya existe un admin con ese DNI', true); return; }
-    admins.push({ nombre, dni, pass });
-    lsSave('admins', admins);
-    document.getElementById('nuevo-admin-nombre').value = '';
-    document.getElementById('nuevo-admin-dni').value    = '';
-    document.getElementById('nuevo-admin-pass').value   = '';
-    toast('Administrador agregado');
-    renderListaAdmins();
-}
-
-function eliminarAdmin(idx) {
-    if (!confirm('¿Eliminar este administrador?')) return;
-    let admins = ls('admins');
-    admins.splice(idx, 1);
-    lsSave('admins', admins);
-    toast('Administrador eliminado');
-    renderListaAdmins();
-}
-
-function limpiarDatos(key) {
-    if (!confirm(`¿Seguro que quieres limpiar "${key}"? Esta acción no se puede deshacer.`)) return;
-    localStorage.removeItem(key);
-    toast(`Datos de "${key}" eliminados`);
-}
-
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-
-(function init() {
-    const nombre = localStorage.getItem('usuario') || sessionStorage.getItem('usuario') || 'Administrador';
-    document.getElementById('adminNombre').textContent = nombre;
-
-    // contador de visitas
-    const v = parseInt(localStorage.getItem('visitas') || '0') + 1;
-    localStorage.setItem('visitas', v);
-
-    renderInicio();
-})();
-
-</script>
+    <div class="modal fade" id="modalUsuario" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formUsuario" th:action="@{/admin/usuarios/guardar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gestionar usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Nombre</label>
+                                <input class="form-control" type="text" name="nombre" maxlength="100" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Rol</label>
+                                <select class="form-select" name="rolId" required>
+                                    <option value="">Selecciona un rol</option>
+                                    <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}">
+                                        CLIENTE
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Correo</label>
+                                <input class="form-control" type="email" name="correo" maxlength="120" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">DNI</label>
+                                <input class="form-control" type="text" name="dni" maxlength="20">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Telefono</label>
+                                <input class="form-control" type="text" name="telefono" maxlength="20">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Sexo</label>
+                                <select class="form-select" name="sexo">
+                                    <option value="">Sin indicar</option>
+                                    <option value="MASCULINO">MASCULINO</option>
+                                    <option value="FEMENINO">FEMENINO</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Contrasena nueva</label>
+                                <input class="form-control" type="password" name="password" maxlength="72"
+                                    placeholder="Completar solo si quieres crear o cambiar la contrasena">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPago" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formPago" th:action="@{/admin/pagos/guardar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gestionar pago</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="admin-form-label">Cita</label>
+                                <select class="form-select" name="citaId" required>
+                                    <option value="">Selecciona una cita</option>
+                                    <option th:each="cita : ${citas}" th:value="${cita.id}"
+                                        th:text="${'#' + cita.id + ' - ' + cita.usuario.nombre + ' / ' + cita.mascota.nombre + ' / ' + cita.servicio.nombre}">
+                                        Cita
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Metodo</label>
+                                <select class="form-select" name="metodoPagoId" required>
+                                    <option value="">Metodo</option>
+                                    <option th:each="metodo : ${metodosPago}" th:value="${metodo.id}"
+                                        th:text="${metodo.nombre}">EFECTIVO</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Estado</label>
+                                <select class="form-select" name="estadoPagoId" required>
+                                    <option value="">Estado</option>
+                                    <option th:each="estado : ${estadosPago}" th:value="${estado.id}"
+                                        th:text="${estado.nombre}">PENDIENTE</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="admin-form-label">Monto</label>
+                                <input class="form-control" type="number" step="0.01" min="0" name="monto" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Fecha pago</label>
+                                <input class="form-control" type="datetime-local" name="fechaPago">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAtencion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="formAtencion" th:action="@{/admin/atenciones/guardar}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gestionar atencion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="admin-form-label">Cita</label>
+                                <select class="form-select" name="citaId" required>
+                                    <option value="">Selecciona una cita</option>
+                                    <option th:each="cita : ${citas}" th:value="${cita.id}"
+                                        th:text="${'#' + cita.id + ' - ' + cita.usuario.nombre + ' / ' + cita.mascota.nombre + ' / ' + cita.servicio.nombre}">
+                                        Cita
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="admin-form-label">Fecha registro</label>
+                                <input class="form-control" type="datetime-local" name="fechaRegistro">
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Diagnostico</label>
+                                <textarea class="form-control" name="diagnostico" rows="3"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Tratamiento</label>
+                                <textarea class="form-control" name="tratamiento" rows="3"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="admin-form-label">Observaciones</label>
+                                <textarea class="form-control" name="observaciones" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const normalizarValorTemporal = (field, value) => {
+            if (!value) {
+                return '';
+            }
+
+            if (field.type === 'date') {
+                return value.slice(0, 10);
+            }
+
+            if (field.type === 'time') {
+                return value.slice(0, 5);
+            }
+
+            if (field.type === 'datetime-local') {
+                return value.replace(' ', 'T').split('.')[0].slice(0, 16);
+            }
+
+            return value;
+        };
+
+        const limpiarFormularioAdmin = (form) => {
+            if (!form) {
+                return;
+            }
+
+            form.reset();
+            Array.from(form.elements).forEach((field) => {
+                if (!field.name || field.type === 'button' || field.type === 'submit') {
+                    return;
+                }
+
+                if (field.tagName === 'SELECT') {
+                    field.value = '';
+                    return;
+                }
+
+                field.value = '';
+            });
+        };
+
+        document.querySelectorAll('[data-admin-reset]').forEach((button) => {
+            button.addEventListener('click', () => {
+                limpiarFormularioAdmin(document.getElementById(button.dataset.adminReset));
+            });
+        });
+
+        document.querySelectorAll('[data-admin-fill]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const form = document.getElementById(button.dataset.adminFill);
+                limpiarFormularioAdmin(form);
+
+                if (!form) {
+                    return;
+                }
+
+                Array.from(form.elements).forEach((field) => {
+                    if (!field.name || !Object.prototype.hasOwnProperty.call(button.dataset, field.name)) {
+                        return;
+                    }
+
+                    field.value = normalizarValorTemporal(field, button.dataset[field.name]);
+                });
+            });
+        });
+
+        document.querySelectorAll('[data-confirm-delete]').forEach((button) => {
+            button.addEventListener('click', (event) => {
+                if (!confirm(button.dataset.confirmDelete)) {
+                    event.preventDefault();
+                }
+            });
+        });
+
+        document.querySelectorAll('.nav-admin').forEach((link) => {
+            link.addEventListener('click', () => {
+                document.querySelectorAll('.nav-admin').forEach((item) => item.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('[data-table-filter]').forEach((input) => {
+            const table = document.getElementById(input.dataset.tableFilter);
+
+            if (!table) {
+                return;
+            }
+
+            input.addEventListener('input', () => {
+                const query = input.value.trim().toLowerCase();
+
+                table.querySelectorAll('tbody tr').forEach((row) => {
+                    row.classList.toggle('d-none', !row.textContent.toLowerCase().includes(query));
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
