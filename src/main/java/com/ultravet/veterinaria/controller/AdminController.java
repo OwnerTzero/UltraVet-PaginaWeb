@@ -51,8 +51,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
 
     private static final String ESTADO_SOLICITUD_APROBADA = "APROBADA";
-    private static final String ESTADO_MASCOTA_ADOPTADA = "ADOPTADA";
-    private static final String ESTADO_CITA_ATENDIDA = "ATENDIDA";
+    private static final String ESTADO_MASCOTA_ADOPTADA   = "ADOPTADA";
+    private static final String ESTADO_CITA_ATENDIDA      = "ATENDIDA";
+
+    // Estados de mascota que pertenecen al modulo de adopcion (NO incluye REGISTRADA)
+    private static final List<String> ESTADOS_ADOPCION = List.of("DISPONIBLE", "EN_PROCESO", "ADOPTADA");
 
     private final MascotaRepository mascotaRepository;
     private final SolicitudAdopcionRepository solicitudAdopcionRepository;
@@ -358,28 +361,44 @@ public class AdminController {
         return desactivar("atenciones", "Atencion eliminada del listado.", redirectAttributes, atencionRepository, id);
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // CARGA DEL DASHBOARD
+    // ─────────────────────────────────────────────────────────────
+
     private void cargarDashboard(Model model) {
-        List<Mascota> mascotas = mascotaRepository.findByActivoTrueOrderByIdAsc();
+        // Todas las mascotas activas (para selectores de citas/pagos en modales)
+        List<Mascota> todasMascotas = mascotaRepository.findByActivoTrueOrderByIdAsc();
+
+        // Solo mascotas de adopcion: DISPONIBLE, EN_PROCESO, ADOPTADA
+        // Las mascotas con estado REGISTRADA vienen del formulario de servicios
+        // y NO deben aparecer en la seccion de adopciones
+        List<Mascota> mascotasAdopcion = mascotaRepository
+                .findByActivoTrueAndEstadoNombreInOrderByIdAsc(ESTADOS_ADOPCION);
+
         List<SolicitudAdopcion> solicitudes = solicitudAdopcionRepository.findByActivoTrueOrderByFechaEnvioDesc();
-        List<Usuario> usuarios = usuarioRepository.findByActivoTrueOrderByIdAsc();
-        List<Servicio> servicios = servicioRepository.findByActivoTrueOrderByIdAsc();
-        List<Cita> citas = citaRepository.findByActivoTrueOrderByFechaDescHoraDesc();
-        List<Pago> pagos = pagoRepository.findByActivoTrueOrderByFechaPagoDescIdDesc();
-        List<Atencion> atenciones = atencionRepository.findByActivoTrueOrderByFechaRegistroDesc();
+        List<Usuario> usuarios             = usuarioRepository.findByActivoTrueOrderByIdAsc();
+        List<Servicio> servicios           = servicioRepository.findByActivoTrueOrderByIdAsc();
+        List<Cita> citas                   = citaRepository.findByActivoTrueOrderByFechaDescHoraDesc();
+        List<Pago> pagos                   = pagoRepository.findByActivoTrueOrderByFechaPagoDescIdDesc();
+        List<Atencion> atenciones          = atencionRepository.findByActivoTrueOrderByFechaRegistroDesc();
 
         long totalClientes = usuarios.stream()
-                .filter(usuario -> usuario.getRol() != null && "CLIENTE".equals(usuario.getRol().getNombre()))
+                .filter(u -> u.getRol() != null && "CLIENTE".equals(u.getRol().getNombre()))
                 .count();
         long citasPendientes = citas.stream()
-                .filter(cita -> cita.getEstado() != null && "PENDIENTE".equals(cita.getEstado().getNombre()))
+                .filter(c -> c.getEstado() != null && "PENDIENTE".equals(c.getEstado().getNombre()))
                 .count();
         long solicitudesPendientes = solicitudes.stream()
-                .filter(solicitud -> solicitud.getEstado() != null
-                        && "PENDIENTE".equals(solicitud.getEstado().getNombre()))
+                .filter(s -> s.getEstado() != null && "PENDIENTE".equals(s.getEstado().getNombre()))
                 .count();
         BigDecimal totalPagado = pagoRepository.sumMontoActivo();
 
-        model.addAttribute("mascotas", mascotas);
+        // Lista de mascotas para la tabla de adopciones (filtrada)
+        model.addAttribute("mascotasAdopcion", mascotasAdopcion);
+
+        // Lista completa para selectores de modales (citas, pagos, etc.)
+        model.addAttribute("mascotas", todasMascotas);
+
         model.addAttribute("solicitudes", solicitudes);
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("servicios", servicios);
@@ -391,7 +410,7 @@ public class AdminController {
         model.addAttribute("ultimasSolicitudes", limitar(solicitudes, 5));
         model.addAttribute("ultimosPagos", limitar(pagos, 5));
 
-        model.addAttribute("totalMascotas", mascotas.size());
+        model.addAttribute("totalMascotas", mascotasAdopcion.size());
         model.addAttribute("totalSolicitudes", solicitudes.size());
         model.addAttribute("totalUsuarios", usuarios.size());
         model.addAttribute("totalClientes", totalClientes);
@@ -412,6 +431,10 @@ public class AdminController {
         model.addAttribute("metodosPago", listar(metodoPagoRepository));
         model.addAttribute("estadosPago", listar(estadoPagoRepository));
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // HELPERS
+    // ─────────────────────────────────────────────────────────────
 
     private void sincronizarMascotaAdoptada(SolicitudAdopcion solicitud) {
         EstadoSolicitud estado = solicitud.getEstado();
