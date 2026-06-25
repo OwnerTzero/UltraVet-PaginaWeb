@@ -138,12 +138,6 @@ public class AuthController {
         return redireccionAnterior(request);
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
-    }
-
     private void validarRegistro(RegistroUsuarioForm form, BindingResult result) {
         if (!Objects.equals(form.getPassword(), form.getConfirmPassword())) {
             result.rejectValue("confirmPassword", "password.noCoincide", "Las contrasenas no coinciden.");
