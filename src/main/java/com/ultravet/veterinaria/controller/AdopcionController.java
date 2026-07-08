@@ -13,6 +13,7 @@ import com.ultravet.veterinaria.repository.SolicitudAdopcionRepository;
 import com.ultravet.veterinaria.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,8 @@ public class AdopcionController {
 
     private static final String ROL_CLIENTE = "CLIENTE";
     private static final String ESTADO_SOLICITUD_PENDIENTE = "PENDIENTE";
+    private static final String ESTADO_MASCOTA_DISPONIBLE = "DISPONIBLE";
+    private static final List<String> ESTADOS_ADOPCION = List.of("DISPONIBLE", "EN_PROCESO", "ADOPTADA");
 
     private final SolicitudAdopcionRepository adopcionRepository;
     private final UsuarioRepository usuarioRepository;
@@ -75,6 +78,11 @@ public class AdopcionController {
             return "adopcion";
         }
 
+        if (!estaDisponibleParaAdopcion(mascota)) {
+            model.addAttribute("mensajeError", "La mascota seleccionada no esta disponible para adopcion.");
+            return "adopcion";
+        }
+
         Usuario usuario = obtenerOCrearUsuario(solicitudForm);
 
         if (adopcionRepository.existsByUsuarioAndMascota(usuario, mascota)) {
@@ -104,11 +112,17 @@ public class AdopcionController {
     }
 
     private void prepararVistaAdopcion(Model model) {
-        model.addAttribute("mascotas", mascotaRepository.findByActivoTrueOrderByIdAsc());
+        model.addAttribute("mascotas",
+                mascotaRepository.findByActivoTrueAndEstadoNombreInOrderByIdAsc(ESTADOS_ADOPCION));
 
         if (!model.containsAttribute("solicitud")) {
             model.addAttribute("solicitud", new SolicitudAdopcionForm());
         }
+    }
+
+    private boolean estaDisponibleParaAdopcion(Mascota mascota) {
+        return mascota.getEstado() != null
+                && ESTADO_MASCOTA_DISPONIBLE.equalsIgnoreCase(mascota.getEstado().getNombre());
     }
 
     private Usuario obtenerOCrearUsuario(SolicitudAdopcionForm form) {
@@ -164,3 +178,4 @@ public class AdopcionController {
         return valor.trim();
     }
 }
+
