@@ -19,6 +19,8 @@ import com.ultravet.veterinaria.repository.ServicioRepository;
 import com.ultravet.veterinaria.repository.UsuarioRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -87,6 +89,8 @@ public class ServiciosController {
                         "El servicio seleccionado no esta disponible.");
             }
         }
+
+        validarDniUnico(citaForm.getCorreo(), citaForm.getDni(), result);
 
         if (result.hasErrors()) {
             prepararVistaServicios(model, session);
@@ -174,6 +178,8 @@ public class ServiciosController {
 
     private Usuario actualizarDatosBasicos(Usuario usuario, SolicitudCitaForm form) {
         usuario.setNombre(form.getNombre().trim());
+        usuario.setDni(form.getDni().trim());
+        usuario.setSexo(form.getSexo());
         usuario.setTelefono(form.getTelefono().trim());
         usuario.setActivo(true);
         return usuarioRepository.save(usuario);
@@ -186,6 +192,8 @@ public class ServiciosController {
         Usuario usuario = new Usuario();
         usuario.setRol(rolCliente);
         usuario.setNombre(form.getNombre().trim());
+        usuario.setDni(form.getDni().trim());
+        usuario.setSexo(form.getSexo());
         usuario.setCorreo(correo);
         usuario.setTelefono(form.getTelefono().trim());
         usuario.setActivo(true);
@@ -203,6 +211,9 @@ public class ServiciosController {
 
     private Mascota actualizarMascota(Mascota mascota, SolicitudCitaForm form) {
         mascota.setTipo(form.getMascotaTipo().trim());
+        mascota.setSexo(form.getMascotaSexo());
+        mascota.setRaza(form.getMascotaRaza().trim());
+        mascota.setFechaNacimiento(form.getMascotaFechaNacimiento());
         mascota.setActivo(true);
         return mascotaRepository.save(mascota);
     }
@@ -219,9 +230,27 @@ public class ServiciosController {
         mascota.setPrioridad(prioridadNormal);
         mascota.setNombre(nombreMascota);
         mascota.setTipo(form.getMascotaTipo().trim());
+        mascota.setSexo(form.getMascotaSexo());
+        mascota.setRaza(form.getMascotaRaza().trim());
+        mascota.setFechaNacimiento(form.getMascotaFechaNacimiento());
         mascota.setActivo(true);
 
         return mascotaRepository.save(mascota);
+    }
+
+    private void validarDniUnico(String correo, String dni, BindingResult result) {
+        if (result.hasFieldErrors("correo") || result.hasFieldErrors("dni")) {
+            return;
+        }
+
+        Optional<Usuario> usuarioCorreo = usuarioRepository.findByCorreoIgnoreCase(correo.trim().toLowerCase());
+        Optional<Usuario> usuarioDni = usuarioRepository.findByDni(dni.trim());
+
+        if (usuarioDni.isPresent()
+                && (usuarioCorreo.isEmpty()
+                        || !Objects.equals(usuarioDni.get().getId(), usuarioCorreo.get().getId()))) {
+            result.rejectValue("dni", "dni.duplicado", "Ya existe una cuenta con ese DNI.");
+        }
     }
 
     private void actualizarSesion(HttpSession session, Usuario usuario) {

@@ -13,6 +13,8 @@ import com.ultravet.veterinaria.repository.SolicitudAdopcionRepository;
 import com.ultravet.veterinaria.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,6 +60,7 @@ public class AdopcionController {
             Model model) {
 
         prepararVistaAdopcion(model);
+        validarDniUnico(solicitudForm.getCorreo(), solicitudForm.getDni(), result);
 
         if (result.hasErrors()) {
             model.addAttribute("mensajeError", "Revisa los datos ingresados e intenta nuevamente.");
@@ -116,6 +119,8 @@ public class AdopcionController {
 
     private Usuario actualizarDatosBasicos(Usuario usuario, SolicitudAdopcionForm form) {
         usuario.setNombre(form.getNombre().trim());
+        usuario.setDni(form.getDni().trim());
+        usuario.setSexo(form.getSexo());
         usuario.setTelefono(form.getTelefono().trim());
         return usuarioRepository.save(usuario);
     }
@@ -127,11 +132,28 @@ public class AdopcionController {
         Usuario usuario = new Usuario();
         usuario.setRol(rolCliente);
         usuario.setNombre(form.getNombre().trim());
+        usuario.setDni(form.getDni().trim());
+        usuario.setSexo(form.getSexo());
         usuario.setCorreo(form.getCorreo().trim().toLowerCase());
         usuario.setTelefono(form.getTelefono().trim());
         usuario.setActivo(true);
 
         return usuarioRepository.save(usuario);
+    }
+
+    private void validarDniUnico(String correo, String dni, BindingResult result) {
+        if (result.hasFieldErrors("correo") || result.hasFieldErrors("dni")) {
+            return;
+        }
+
+        Optional<Usuario> usuarioCorreo = usuarioRepository.findByCorreoIgnoreCase(correo.trim().toLowerCase());
+        Optional<Usuario> usuarioDni = usuarioRepository.findByDni(dni.trim());
+
+        if (usuarioDni.isPresent()
+                && (usuarioCorreo.isEmpty()
+                        || !Objects.equals(usuarioDni.get().getId(), usuarioCorreo.get().getId()))) {
+            result.rejectValue("dni", "dni.duplicado", "Ya existe una cuenta con ese DNI.");
+        }
     }
 
     private String limpiarTexto(String valor) {

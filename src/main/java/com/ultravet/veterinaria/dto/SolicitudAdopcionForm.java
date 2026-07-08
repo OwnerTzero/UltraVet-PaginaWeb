@@ -23,6 +23,14 @@ public class SolicitudAdopcionForm {
     @Pattern(regexp = "^[0-9 ]{7,15}$", message = "El telefono debe contener entre 7 y 15 digitos")
     private String telefono;
 
+    @NotBlank(message = "El DNI es obligatorio")
+    @Pattern(regexp = "\\d{8}", message = "El DNI debe tener 8 digitos")
+    private String dni;
+
+    @NotBlank(message = "Debe seleccionar su sexo")
+    @Pattern(regexp = "MASCULINO|FEMENINO|NO_INDICA", message = "Seleccione un sexo valido")
+    private String sexo;
+
     @NotBlank(message = "El distrito es obligatorio")
     @Size(max = 120, message = "El distrito debe tener como maximo 120 caracteres")
     private String distrito;
@@ -61,6 +69,22 @@ public class SolicitudAdopcionForm {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
     }
 
     public String getDistrito() {

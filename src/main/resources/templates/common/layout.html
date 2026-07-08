@@ -79,6 +79,9 @@
 
         <div class="modal-content auth-modal-content border-0 shadow-lg">
 
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal"
+                aria-label="Cerrar"></button>
+
             <!-- HEADER -->
             <div class="text-center mb-4">
 
@@ -189,7 +192,8 @@
                     <input type="password" class="form-control auth-input" th:field="*{password}"
                         th:errorclass="is-invalid" placeholder="Contrasena">
 
-                    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                    <button type="button" class="btn btn-outline-secondary"
+                        onclick="togglePassword('loginForm', 'password', this)">
 
                         <i class="bi bi-eye-fill"></i>
 
@@ -223,7 +227,7 @@
             <!-- REGISTRO CLIENTE -->
 
             <form id="registerForm" method="post" th:action="@{/registro}" th:object="${registroUsuarioForm}"
-                th:style="${authMode == 'registro' ? '' : 'display:none;'}" novalidate>
+                th:style="${authMode == 'registro' ? '' : 'display:none;'}">
 
                 <div class="input-group mb-1">
 
@@ -232,7 +236,7 @@
                     </span>
 
                     <input type="text" class="form-control auth-input" th:field="*{nombre}"
-                        th:errorclass="is-invalid" placeholder="Nombres y apellidos">
+                        th:errorclass="is-invalid" placeholder="Nombres y apellidos" required maxlength="100">
 
                 </div>
 
@@ -246,7 +250,8 @@
                     </span>
 
                     <input type="text" class="form-control auth-input" th:field="*{dni}"
-                        th:errorclass="is-invalid" placeholder="DNI" maxlength="8">
+                        th:errorclass="is-invalid" placeholder="DNI" required pattern="\d{8}"
+                        maxlength="8" title="El DNI debe tener 8 digitos.">
 
                 </div>
 
@@ -256,11 +261,29 @@
                 <div class="input-group mb-1">
 
                     <span class="input-group-text auth-icon">
+                        <i class="bi bi-gender-ambiguous"></i>
+                    </span>
+
+                    <select class="form-select auth-input" th:field="*{sexo}" th:errorclass="is-invalid" required>
+                        <option value="">Sexo</option>
+                        <option value="MASCULINO">Masculino</option>
+                        <option value="FEMENINO">Femenino</option>
+                        <option value="NO_INDICA">Prefiero no indicar</option>
+                    </select>
+
+                </div>
+
+                <div class="invalid-feedback d-block mb-2" th:if="${#fields.hasErrors('sexo')}"
+                    th:errors="*{sexo}"></div>
+
+                <div class="input-group mb-1">
+
+                    <span class="input-group-text auth-icon">
                         <i class="bi bi-envelope-fill"></i>
                     </span>
 
                     <input type="email" class="form-control auth-input" th:field="*{correo}"
-                        th:errorclass="is-invalid" placeholder="Correo electronico">
+                        th:errorclass="is-invalid" placeholder="Correo electronico" required maxlength="120">
 
                 </div>
 
@@ -274,7 +297,8 @@
                     </span>
 
                     <input type="text" class="form-control auth-input" th:field="*{telefono}"
-                        th:errorclass="is-invalid" placeholder="Telefono">
+                        th:errorclass="is-invalid" placeholder="Telefono" required
+                        pattern="[0-9 +()\-]{7,20}" title="Ingresa un telefono valido.">
 
                 </div>
 
@@ -288,7 +312,14 @@
                     </span>
 
                     <input type="password" class="form-control auth-input" th:field="*{password}"
-                        th:errorclass="is-invalid" placeholder="Contrasena">
+                        th:errorclass="is-invalid" placeholder="Contrasena" required minlength="6" maxlength="72">
+
+                    <button type="button" class="btn btn-outline-secondary"
+                        onclick="togglePassword('registerForm', 'password', this)">
+
+                        <i class="bi bi-eye-fill"></i>
+
+                    </button>
 
                 </div>
 
@@ -302,7 +333,15 @@
                     </span>
 
                     <input type="password" class="form-control auth-input" th:field="*{confirmPassword}"
-                        th:errorclass="is-invalid" placeholder="Confirmar contrasena">
+                        th:errorclass="is-invalid" placeholder="Confirmar contrasena" required minlength="6"
+                        maxlength="72">
+
+                    <button type="button" class="btn btn-outline-secondary"
+                        onclick="togglePassword('registerForm', 'confirmPassword', this)">
+
+                        <i class="bi bi-eye-fill"></i>
+
+                    </button>
 
                 </div>
 

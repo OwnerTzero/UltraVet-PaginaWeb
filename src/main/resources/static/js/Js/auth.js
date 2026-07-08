@@ -14,6 +14,10 @@
         return $(`#loginForm [name="${name}"]`);
     }
 
+    function formField(formId, name) {
+        return $(`#${formId} [name="${name}"]`);
+    }
+
     function setLoginMode(visible) {
         modoLogin = visible;
         setDisplay(byId("loginForm"), visible);
@@ -61,10 +65,18 @@
         setLoginMode(true);
     };
 
-    window.togglePassword = () => {
-        const input = loginField("password");
-        if (input) {
-            input.type = input.type === "password" ? "text" : "password";
+    window.togglePassword = (formId = "loginForm", fieldName = "password", button = null) => {
+        const input = formField(formId, fieldName);
+        if (!input) {
+            return;
+        }
+
+        input.type = input.type === "password" ? "text" : "password";
+
+        const icon = button?.querySelector("i");
+        if (icon) {
+            icon.classList.toggle("bi-eye-fill");
+            icon.classList.toggle("bi-eye-slash-fill");
         }
     };
 
@@ -98,6 +110,27 @@
         msg.textContent = texto;
     };
 
+    function initValidacionRegistro() {
+        const password = formField("registerForm", "password");
+        const confirmPassword = formField("registerForm", "confirmPassword");
+
+        if (!password || !confirmPassword) {
+            return;
+        }
+
+        const validarCoincidencia = () => {
+            if (confirmPassword.value && confirmPassword.value !== password.value) {
+                confirmPassword.setCustomValidity("Las contrasenas no coinciden.");
+                return;
+            }
+
+            confirmPassword.setCustomValidity("");
+        };
+
+        password.addEventListener("input", validarCoincidencia);
+        confirmPassword.addEventListener("input", validarCoincidencia);
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         const authModal = byId("authModal");
         const authMode = authModal?.dataset.mode || "login";
@@ -105,6 +138,7 @@
 
         window.cambiarTipoAcceso(tipoAcceso === "ADMIN" ? "ADMIN" : "CLIENTE");
         setLoginMode(authMode !== "registro");
+        initValidacionRegistro();
 
         byId("recoverForm")?.addEventListener("submit", (event) => {
             event.preventDefault();

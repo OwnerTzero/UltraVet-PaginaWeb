@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -27,6 +28,14 @@ public class SolicitudCitaForm {
     @Pattern(regexp = "^[0-9 ]{7,15}$", message = "El telefono debe contener entre 7 y 15 digitos")
     private String telefono;
 
+    @NotBlank(message = "El DNI es obligatorio")
+    @Pattern(regexp = "\\d{8}", message = "El DNI debe tener 8 digitos")
+    private String dni;
+
+    @NotBlank(message = "Debe seleccionar su sexo")
+    @Pattern(regexp = "MASCULINO|FEMENINO|NO_INDICA", message = "Seleccione un sexo valido")
+    private String sexo;
+
     @NotBlank(message = "El nombre de la mascota es obligatorio")
     @Size(max = 80, message = "El nombre de la mascota debe tener como maximo 80 caracteres")
     private String mascotaNombre;
@@ -34,6 +43,18 @@ public class SolicitudCitaForm {
     @NotBlank(message = "El tipo de mascota es obligatorio")
     @Size(max = 50, message = "El tipo de mascota debe tener como maximo 50 caracteres")
     private String mascotaTipo;
+
+    @NotBlank(message = "Debe seleccionar el sexo de la mascota")
+    @Pattern(regexp = "MACHO|HEMBRA|NO_INDICA", message = "Seleccione un sexo de mascota valido")
+    private String mascotaSexo;
+
+    @NotBlank(message = "La raza de la mascota es obligatoria")
+    @Size(max = 80, message = "La raza debe tener como maximo 80 caracteres")
+    private String mascotaRaza;
+
+    @PastOrPresent(message = "La fecha de nacimiento no puede ser futura")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate mascotaFechaNacimiento;
 
     @NotNull(message = "Debe seleccionar una fecha")
     @FutureOrPresent(message = "La fecha no puede ser anterior a hoy")
@@ -79,6 +100,22 @@ public class SolicitudCitaForm {
         this.telefono = telefono;
     }
 
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
     public String getMascotaNombre() {
         return mascotaNombre;
     }
@@ -93,6 +130,30 @@ public class SolicitudCitaForm {
 
     public void setMascotaTipo(String mascotaTipo) {
         this.mascotaTipo = mascotaTipo;
+    }
+
+    public String getMascotaSexo() {
+        return mascotaSexo;
+    }
+
+    public void setMascotaSexo(String mascotaSexo) {
+        this.mascotaSexo = mascotaSexo;
+    }
+
+    public String getMascotaRaza() {
+        return mascotaRaza;
+    }
+
+    public void setMascotaRaza(String mascotaRaza) {
+        this.mascotaRaza = mascotaRaza;
+    }
+
+    public LocalDate getMascotaFechaNacimiento() {
+        return mascotaFechaNacimiento;
+    }
+
+    public void setMascotaFechaNacimiento(LocalDate mascotaFechaNacimiento) {
+        this.mascotaFechaNacimiento = mascotaFechaNacimiento;
     }
 
     public LocalDate getFecha() {

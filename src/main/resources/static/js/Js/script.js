@@ -127,6 +127,7 @@ function seleccionarServicioPorNombre(select, nombre) {
 function iniciarFormularioCitas() {
     const formulario = document.getElementById("formCotizar");
     const fecha = document.getElementById("cotizaFecha");
+    const fechaNacimientoMascota = document.getElementById("cotizaMascotaFechaNacimiento");
     const modalCotizar = document.getElementById("modalCotizar");
 
     if (!formulario || !fecha) {
@@ -137,6 +138,10 @@ function iniciarFormularioCitas() {
     const mes = String(hoy.getMonth() + 1).padStart(2, "0");
     const dia = String(hoy.getDate()).padStart(2, "0");
     fecha.min = `${hoy.getFullYear()}-${mes}-${dia}`;
+
+    if (fechaNacimientoMascota) {
+        fechaNacimientoMascota.max = fecha.min;
+    }
 
     formulario.addEventListener("submit", (event) => {
         if (!formulario.checkValidity()) {

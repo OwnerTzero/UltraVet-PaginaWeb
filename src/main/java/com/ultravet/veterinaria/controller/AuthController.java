@@ -6,14 +6,20 @@ import com.ultravet.veterinaria.model.Rol;
 import com.ultravet.veterinaria.model.Usuario;
 import com.ultravet.veterinaria.repository.RolRepository;
 import com.ultravet.veterinaria.repository.UsuarioRepository;
+import com.ultravet.veterinaria.security.UsuarioPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -33,13 +39,16 @@ public class AuthController {
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SecurityContextRepository securityContextRepository;
 
     public AuthController(UsuarioRepository usuarioRepository,
             RolRepository rolRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            SecurityContextRepository securityContextRepository) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.passwordEncoder = passwordEncoder;
+        this.securityContextRepository = securityContextRepository;
     }
 
     @PostMapping("/registro")
@@ -48,6 +57,7 @@ public class AuthController {
             @Valid @ModelAttribute("registroUsuarioForm") RegistroUsuarioForm form,
             BindingResult result,
             HttpServletRequest request,
+            HttpServletResponse response,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
@@ -70,15 +80,18 @@ public class AuthController {
 
         usuario.setNombre(form.getNombre());
         usuario.setDni(form.getDni());
+        usuario.setSexo(form.getSexo());
         usuario.setCorreo(form.getCorreo());
         usuario.setTelefono(form.getTelefono());
         usuario.setPasswordHash(passwordEncoder.encode(form.getPassword()));
         usuario.setActivo(true);
 
         usuarioRepository.save(usuario);
-        actualizarSesion(session, usuario);
+        actualizarSesion(request, response, session, usuario);
 
         redirectAttributes.addFlashAttribute("authSuccess", "Cuenta registrada correctamente.");
+        redirectAttributes.addFlashAttribute("abrirAuthModal", true);
+        redirectAttributes.addFlashAttribute("authMode", "login");
         return redireccionAnterior(request);
     }
 
@@ -88,6 +101,7 @@ public class AuthController {
             @Valid @ModelAttribute("loginForm") LoginForm form,
             BindingResult result,
             HttpServletRequest request,
+            HttpServletResponse response,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
@@ -129,7 +143,7 @@ public class AuthController {
                     "login", "Usuario o contrasena incorrectos.");
         }
 
-        actualizarSesion(session, usuario);
+        actualizarSesion(request, response, session, usuario);
 
         if (tieneRol(usuario, ROL_ADMIN)) {
             return "redirect:/admin";
@@ -234,10 +248,25 @@ public class AuthController {
         return correo == null ? "" : correo.trim().toLowerCase(Locale.ROOT);
     }
 
-    private void actualizarSesion(HttpSession session, Usuario usuario) {
+    private void actualizarSesion(HttpServletRequest request, HttpServletResponse response,
+            HttpSession session, Usuario usuario) {
         session.setAttribute("usuarioId", usuario.getId());
         session.setAttribute("usuarioNombre", usuario.getNombre());
         session.setAttribute("usuarioRol", usuario.getRol().getNombre());
+
+        autenticarConSpringSecurity(request, response, usuario);
+    }
+
+    private void autenticarConSpringSecurity(HttpServletRequest request, HttpServletResponse response,
+            Usuario usuario) {
+        UsuarioPrincipal principal = new UsuarioPrincipal(usuario);
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+        securityContextRepository.saveContext(context, request, response);
     }
 
     private String redireccionConErrores(HttpServletRequest request,

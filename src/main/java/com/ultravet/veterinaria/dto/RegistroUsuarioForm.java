@@ -15,6 +15,10 @@ public class RegistroUsuarioForm {
     @Pattern(regexp = "\\d{8}", message = "El DNI debe tener 8 digitos.")
     private String dni;
 
+    @NotBlank(message = "Selecciona tu sexo.")
+    @Pattern(regexp = "MASCULINO|FEMENINO|NO_INDICA", message = "Selecciona un sexo valido.")
+    private String sexo;
+
     @NotBlank(message = "Ingresa tu correo.")
     @Email(message = "Ingresa un correo valido.")
     @Size(max = 120, message = "El correo no debe superar 120 caracteres.")
@@ -45,6 +49,14 @@ public class RegistroUsuarioForm {
 
     public void setDni(String dni) {
         this.dni = limpiar(dni);
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = limpiar(sexo);
     }
 
     public String getCorreo() {

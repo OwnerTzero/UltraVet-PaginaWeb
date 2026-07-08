@@ -529,11 +529,61 @@
                                 <div class="invalid-feedback" th:errors="*{telefono}">Ingresa un teléfono válido.</div>
                             </div>
                             <div class="col-md-6">
+                                <label for="cotizaDni" class="form-label">DNI</label>
+                                <input type="text" class="form-control" id="cotizaDni" th:field="*{dni}"
+                                    th:classappend="${#fields.hasErrors('dni')} ? ' is-invalid'"
+                                    pattern="\d{8}" maxlength="8" placeholder="12345678" required>
+                                <div class="invalid-feedback" th:errors="*{dni}">Ingresa un DNI valido.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaSexo" class="form-label">Sexo</label>
+                                <select class="form-select" id="cotizaSexo" th:field="*{sexo}"
+                                    th:classappend="${#fields.hasErrors('sexo')} ? ' is-invalid'" required>
+                                    <option value="">Selecciona una opcion</option>
+                                    <option value="MASCULINO">Masculino</option>
+                                    <option value="FEMENINO">Femenino</option>
+                                    <option value="NO_INDICA">Prefiero no indicar</option>
+                                </select>
+                                <div class="invalid-feedback" th:errors="*{sexo}">Selecciona tu sexo.</div>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="cotizaMascota" class="form-label">Nombre de la mascota</label>
                                 <input type="text" class="form-control" id="cotizaMascota" th:field="*{mascotaNombre}"
                                     th:classappend="${#fields.hasErrors('mascotaNombre')} ? ' is-invalid'" required>
                                 <div class="invalid-feedback" th:errors="*{mascotaNombre}">
                                     Ingresa el nombre de tu mascota.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaMascotaSexo" class="form-label">Sexo de la mascota</label>
+                                <select class="form-select" id="cotizaMascotaSexo" th:field="*{mascotaSexo}"
+                                    th:classappend="${#fields.hasErrors('mascotaSexo')} ? ' is-invalid'" required>
+                                    <option value="">Selecciona una opcion</option>
+                                    <option value="MACHO">Macho</option>
+                                    <option value="HEMBRA">Hembra</option>
+                                    <option value="NO_INDICA">No estoy seguro</option>
+                                </select>
+                                <div class="invalid-feedback" th:errors="*{mascotaSexo}">
+                                    Selecciona el sexo de la mascota.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaMascotaRaza" class="form-label">Raza</label>
+                                <input type="text" class="form-control" id="cotizaMascotaRaza"
+                                    th:field="*{mascotaRaza}"
+                                    th:classappend="${#fields.hasErrors('mascotaRaza')} ? ' is-invalid'"
+                                    maxlength="80" placeholder="Mestizo, labrador, siames..." required>
+                                <div class="invalid-feedback" th:errors="*{mascotaRaza}">
+                                    Ingresa la raza de tu mascota.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cotizaMascotaFechaNacimiento" class="form-label">Fecha nacimiento</label>
+                                <input type="date" class="form-control" id="cotizaMascotaFechaNacimiento"
+                                    th:field="*{mascotaFechaNacimiento}"
+                                    th:classappend="${#fields.hasErrors('mascotaFechaNacimiento')} ? ' is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{mascotaFechaNacimiento}">
+                                    La fecha de nacimiento no puede ser futura.
                                 </div>
                             </div>
                             <div class="col-md-6">

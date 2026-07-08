@@ -145,6 +145,24 @@
                     </div>
 
                     <div class="mb-3">
+                        <input type="text" class="form-control" th:field="*{dni}" th:errorclass="is-invalid"
+                            placeholder="DNI" pattern="\d{8}" maxlength="8" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <select class="form-select" th:field="*{sexo}" th:errorclass="is-invalid" required>
+                            <option value="">Sexo</option>
+                            <option value="MASCULINO">Masculino</option>
+                            <option value="FEMENINO">Femenino</option>
+                            <option value="NO_INDICA">Prefiero no indicar</option>
+                        </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('sexo')}" th:errors="*{sexo}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
                         <input type="text" class="form-control" th:field="*{distrito}" th:errorclass="is-invalid"
                             placeholder="Distrito de residencia" required>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('distrito')}" th:errors="*{distrito}">

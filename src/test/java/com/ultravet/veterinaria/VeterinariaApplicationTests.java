@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +32,7 @@ class VeterinariaApplicationTests {
     @Test
     void adminDashboardRendersWithAdminSession() throws Exception {
         mockMvc.perform(get("/admin")
+                .with(user("admin").roles("ADMIN"))
                 .sessionAttr("usuarioRol", "ADMIN"))
                 .andExpect(status().isOk());
     }
