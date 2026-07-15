@@ -596,11 +596,30 @@
                 <!-- ═══════════ CITAS ═══════════ -->
                 <section class="section-block" id="citas">
                     <div class="section-box">
-                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-2">
                             <div class="section-title mb-0">Citas</div>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input class="form-control search-input" type="search" placeholder="Buscar cita..."
-                                    data-table-filter="tabla-citas">
+                            <div class="d-flex flex-column flex-xl-row justify-content-between gap-2">
+                                <form class="d-flex flex-wrap gap-2 align-items-center admin-filter-form"
+                                    th:action="@{/admin}" method="get" data-admin-filter-anchor="citas"
+                                    data-admin-page-param="paginaCitas">
+                                    <input class="form-control search-input" type="search" name="filtroCitas"
+                                        placeholder="Cliente, mascota, servicio..."
+                                        th:value="${filtros.filtroCitas}">
+                                    <select class="form-select search-input" name="estadoCitaId">
+                                        <option value="">Estado</option>
+                                        <option th:each="estado : ${estadosCita}" th:value="${estado.id}"
+                                            th:text="${estado.nombre}"
+                                            th:selected="${filtros.estadoCitaId != null and filtros.estadoCitaId == estado.id}">
+                                        </option>
+                                    </select>
+                                    <input class="form-control search-input" type="date" name="citaDesde"
+                                        th:value="${filtros.citaDesde}">
+                                    <input class="form-control search-input" type="date" name="citaHasta"
+                                        th:value="${filtros.citaHasta}">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-admin-clear-filter="citas">Limpiar</button>
+                                </form>
                                 <button type="button" class="btn-uv-new"
                                     data-admin-reset="formCita" data-bs-toggle="modal" data-bs-target="#modalCita">
                                     <i class="bi bi-plus-lg"></i> Nueva
@@ -664,17 +683,33 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div th:replace="~{admin/fragments/paginacion :: pager(${citasPagina}, 'paginaCitas', 'citas')}"></div>
                     </div>
                 </section>
 
                 <!-- ═══════════ ADOPCIONES ═══════════ -->
                 <section class="section-block" id="adopciones">
                     <div class="section-box">
-                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-2">
                             <div class="section-title mb-0">Solicitudes de adopcion</div>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input class="form-control search-input" type="search" placeholder="Buscar adopcion..."
-                                    data-table-filter="tabla-adopciones">
+                            <div class="d-flex flex-column flex-xl-row justify-content-between gap-2">
+                                <form class="d-flex flex-wrap gap-2 align-items-center admin-filter-form"
+                                    th:action="@{/admin}" method="get" data-admin-filter-anchor="adopciones"
+                                    data-admin-page-param="paginaSolicitudes">
+                                    <input class="form-control search-input" type="search" name="filtroSolicitudes"
+                                        placeholder="Solicitante, mascota, distrito..."
+                                        th:value="${filtros.filtroSolicitudes}">
+                                    <select class="form-select search-input" name="estadoSolicitudId">
+                                        <option value="">Estado</option>
+                                        <option th:each="estado : ${estadosSolicitud}" th:value="${estado.id}"
+                                            th:text="${estado.nombre}"
+                                            th:selected="${filtros.estadoSolicitudId != null and filtros.estadoSolicitudId == estado.id}">
+                                        </option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-admin-clear-filter="adopciones">Limpiar</button>
+                                </form>
                                 <button type="button" class="btn-uv-new"
                                     data-admin-reset="formSolicitud" data-bs-toggle="modal"
                                     data-bs-target="#modalSolicitud">
@@ -739,17 +774,39 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div th:replace="~{admin/fragments/paginacion :: pager(${solicitudesPagina}, 'paginaSolicitudes', 'adopciones')}"></div>
                     </div>
                 </section>
 
                 <!-- ═══════════ MASCOTAS ═══════════ -->
                 <section class="section-block" id="mascotas">
                     <div class="section-box">
-                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-2">
                             <div class="section-title mb-0">Mascotas</div>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input class="form-control search-input" type="search" placeholder="Buscar mascota..."
-                                    data-table-filter="tabla-mascotas">
+                            <div class="d-flex flex-column flex-xl-row justify-content-between gap-2">
+                                <form class="d-flex flex-wrap gap-2 align-items-center admin-filter-form"
+                                    th:action="@{/admin}" method="get" data-admin-filter-anchor="mascotas"
+                                    data-admin-page-param="paginaMascotas">
+                                    <input class="form-control search-input" type="search" name="filtroMascotas"
+                                        placeholder="Nombre, tipo, raza..." th:value="${filtros.filtroMascotas}">
+                                    <select class="form-select search-input" name="estadoMascotaId">
+                                        <option value="">Estado</option>
+                                        <option th:each="estado : ${estadosMascota}" th:value="${estado.id}"
+                                            th:text="${estado.nombre}"
+                                            th:selected="${filtros.estadoMascotaId != null and filtros.estadoMascotaId == estado.id}">
+                                        </option>
+                                    </select>
+                                    <select class="form-select search-input" name="prioridadMascotaId">
+                                        <option value="">Prioridad</option>
+                                        <option th:each="prioridad : ${prioridadesMascota}" th:value="${prioridad.id}"
+                                            th:text="${prioridad.nombre}"
+                                            th:selected="${filtros.prioridadMascotaId != null and filtros.prioridadMascotaId == prioridad.id}">
+                                        </option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-admin-clear-filter="mascotas">Limpiar</button>
+                                </form>
                                 <button type="button" class="btn-uv-new"
                                     data-admin-reset="formMascota" data-bs-toggle="modal"
                                     data-bs-target="#modalMascota">
@@ -815,17 +872,32 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div th:replace="~{admin/fragments/paginacion :: pager(${mascotasPagina}, 'paginaMascotas', 'mascotas')}"></div>
                     </div>
                 </section>
 
                 <!-- ═══════════ SERVICIOS ═══════════ -->
                 <section class="section-block" id="servicios-admin">
                     <div class="section-box">
-                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-2">
                             <div class="section-title mb-0">Servicios</div>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input class="form-control search-input" type="search" placeholder="Buscar servicio..."
-                                    data-table-filter="tabla-servicios">
+                            <div class="d-flex flex-column flex-xl-row justify-content-between gap-2">
+                                <form class="d-flex flex-wrap gap-2 align-items-center admin-filter-form"
+                                    th:action="@{/admin}" method="get" data-admin-filter-anchor="servicios-admin"
+                                    data-admin-page-param="paginaServicios">
+                                    <input class="form-control search-input" type="search" name="filtroServicios"
+                                        placeholder="Nombre, descripcion..." th:value="${filtros.filtroServicios}">
+                                    <select class="form-select search-input" name="categoriaServicioId">
+                                        <option value="">Categoria</option>
+                                        <option th:each="categoria : ${categoriasServicio}" th:value="${categoria.id}"
+                                            th:text="${categoria.nombre}"
+                                            th:selected="${filtros.categoriaServicioId != null and filtros.categoriaServicioId == categoria.id}">
+                                        </option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-admin-clear-filter="servicios-admin">Limpiar</button>
+                                </form>
                                 <button type="button" class="btn-uv-new"
                                     data-admin-reset="formServicio" data-bs-toggle="modal"
                                     data-bs-target="#modalServicio">
@@ -885,17 +957,32 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div th:replace="~{admin/fragments/paginacion :: pager(${serviciosPagina}, 'paginaServicios', 'servicios-admin')}"></div>
                     </div>
                 </section>
 
                 <!-- ═══════════ CLIENTES ═══════════ -->
                 <section class="section-block" id="clientes">
                     <div class="section-box">
-                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-2">
                             <div class="section-title mb-0">Usuarios</div>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input class="form-control search-input" type="search" placeholder="Buscar usuario..."
-                                    data-table-filter="tabla-clientes">
+                            <div class="d-flex flex-column flex-xl-row justify-content-between gap-2">
+                                <form class="d-flex flex-wrap gap-2 align-items-center admin-filter-form"
+                                    th:action="@{/admin}" method="get" data-admin-filter-anchor="clientes"
+                                    data-admin-page-param="paginaUsuarios">
+                                    <input class="form-control search-input" type="search" name="filtroUsuarios"
+                                        placeholder="Nombre, correo, DNI..." th:value="${filtros.filtroUsuarios}">
+                                    <select class="form-select search-input" name="rolId">
+                                        <option value="">Rol</option>
+                                        <option th:each="rol : ${roles}" th:value="${rol.id}"
+                                            th:text="${rol.nombre}"
+                                            th:selected="${filtros.rolId != null and filtros.rolId == rol.id}">
+                                        </option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-admin-clear-filter="clientes">Limpiar</button>
+                                </form>
                                 <button type="button" class="btn-uv-new"
                                     data-admin-reset="formUsuario" data-bs-toggle="modal"
                                     data-bs-target="#modalUsuario">
@@ -953,17 +1040,43 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div th:replace="~{admin/fragments/paginacion :: pager(${usuariosPagina}, 'paginaUsuarios', 'clientes')}"></div>
                     </div>
                 </section>
 
                 <!-- ═══════════ PAGOS ═══════════ -->
                 <section class="section-block" id="pagos">
                     <div class="section-box">
-                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-2">
                             <div class="section-title mb-0">Pagos</div>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input class="form-control search-input" type="search" placeholder="Buscar pago..."
-                                    data-table-filter="tabla-pagos">
+                            <div class="d-flex flex-column flex-xl-row justify-content-between gap-2">
+                                <form class="d-flex flex-wrap gap-2 align-items-center admin-filter-form"
+                                    th:action="@{/admin}" method="get" data-admin-filter-anchor="pagos"
+                                    data-admin-page-param="paginaPagos">
+                                    <input class="form-control search-input" type="search" name="filtroPagos"
+                                        placeholder="Cliente, mascota, servicio..." th:value="${filtros.filtroPagos}">
+                                    <select class="form-select search-input" name="metodoPagoId">
+                                        <option value="">Metodo</option>
+                                        <option th:each="metodo : ${metodosPago}" th:value="${metodo.id}"
+                                            th:text="${metodo.nombre}"
+                                            th:selected="${filtros.metodoPagoId != null and filtros.metodoPagoId == metodo.id}">
+                                        </option>
+                                    </select>
+                                    <select class="form-select search-input" name="estadoPagoId">
+                                        <option value="">Estado</option>
+                                        <option th:each="estado : ${estadosPago}" th:value="${estado.id}"
+                                            th:text="${estado.nombre}"
+                                            th:selected="${filtros.estadoPagoId != null and filtros.estadoPagoId == estado.id}">
+                                        </option>
+                                    </select>
+                                    <input class="form-control search-input" type="date" name="pagoDesde"
+                                        th:value="${filtros.pagoDesde}">
+                                    <input class="form-control search-input" type="date" name="pagoHasta"
+                                        th:value="${filtros.pagoHasta}">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-admin-clear-filter="pagos">Limpiar</button>
+                                </form>
                                 <button type="button" class="btn-uv-new"
                                     data-admin-reset="formPago" data-bs-toggle="modal" data-bs-target="#modalPago">
                                     <i class="bi bi-plus-lg"></i> Nuevo
@@ -1022,17 +1135,30 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div th:replace="~{admin/fragments/paginacion :: pager(${pagosPagina}, 'paginaPagos', 'pagos')}"></div>
                     </div>
                 </section>
 
                 <!-- ═══════════ HISTORIAL MÉDICO ═══════════ -->
                 <section class="section-block" id="atenciones">
                     <div class="section-box">
-                        <div class="d-flex flex-column flex-lg-row justify-content-between gap-2 mb-2">
+                        <div class="d-flex flex-column gap-2 mb-2">
                             <div class="section-title mb-0">Historial M&#233;dico</div>
-                            <div class="d-flex gap-2 align-items-center">
-                                <input class="form-control search-input" type="search" placeholder="Buscar atencion..."
-                                    data-table-filter="tabla-atenciones">
+                            <div class="d-flex flex-column flex-xl-row justify-content-between gap-2">
+                                <form class="d-flex flex-wrap gap-2 align-items-center admin-filter-form"
+                                    th:action="@{/admin}" method="get" data-admin-filter-anchor="atenciones"
+                                    data-admin-page-param="paginaAtenciones">
+                                    <input class="form-control search-input" type="search" name="filtroAtenciones"
+                                        placeholder="Mascota, cliente, diagnostico..."
+                                        th:value="${filtros.filtroAtenciones}">
+                                    <input class="form-control search-input" type="date" name="atencionDesde"
+                                        th:value="${filtros.atencionDesde}">
+                                    <input class="form-control search-input" type="date" name="atencionHasta"
+                                        th:value="${filtros.atencionHasta}">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-admin-clear-filter="atenciones">Limpiar</button>
+                                </form>
                                 <button type="button" class="btn-uv-new"
                                     data-admin-reset="formAtencion" data-bs-toggle="modal"
                                     data-bs-target="#modalAtencion">
@@ -1089,6 +1215,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div th:replace="~{admin/fragments/paginacion :: pager(${atencionesPagina}, 'paginaAtenciones', 'atenciones')}"></div>
                     </div>
                 </section>
             </div>
@@ -1112,7 +1239,7 @@
                                 <label class="admin-form-label">Usuario</label>
                                 <select class="form-select" name="usuarioId" required>
                                     <option value="">Selecciona un usuario</option>
-                                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                                    <option th:each="usuario : ${usuariosOpciones}" th:value="${usuario.id}"
                                         th:text="${usuario.nombre + ' - ' + usuario.correo}">Usuario</option>
                                 </select>
                             </div>
@@ -1128,7 +1255,7 @@
                                 <label class="admin-form-label">Servicio</label>
                                 <select class="form-select" name="servicioId" required>
                                     <option value="">Selecciona un servicio</option>
-                                    <option th:each="servicio : ${servicios}" th:value="${servicio.id}"
+                                    <option th:each="servicio : ${serviciosOpciones}" th:value="${servicio.id}"
                                         th:text="${servicio.nombre}">Servicio</option>
                                 </select>
                             </div>
@@ -1178,7 +1305,7 @@
                                 <label class="admin-form-label">Usuario</label>
                                 <select class="form-select" name="usuarioId" required>
                                     <option value="">Selecciona un usuario</option>
-                                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                                    <option th:each="usuario : ${usuariosOpciones}" th:value="${usuario.id}"
                                         th:text="${usuario.nombre + ' - ' + usuario.correo}">Usuario</option>
                                 </select>
                             </div>
@@ -1240,7 +1367,7 @@
                                 <label class="admin-form-label">Dueno</label>
                                 <select class="form-select" name="usuarioId">
                                     <option value="">Disponible / sin dueno</option>
-                                    <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                                    <option th:each="usuario : ${usuariosOpciones}" th:value="${usuario.id}"
                                         th:text="${usuario.nombre + ' - ' + usuario.correo}">Usuario</option>
                                 </select>
                             </div>
@@ -1424,7 +1551,7 @@
                                 <label class="admin-form-label">Cita</label>
                                 <select class="form-select" name="citaId" required>
                                     <option value="">Selecciona una cita</option>
-                                    <option th:each="cita : ${citas}" th:value="${cita.id}"
+                                    <option th:each="cita : ${citasOpciones}" th:value="${cita.id}"
                                         th:text="${'#' + cita.id + ' - ' + cita.usuario.nombre + ' / ' + cita.mascota.nombre + ' / ' + cita.servicio.nombre}">
                                         Cita
                                     </option>
@@ -1480,7 +1607,7 @@
                                 <label class="admin-form-label">Cita</label>
                                 <select class="form-select" name="citaId" required>
                                     <option value="">Selecciona una cita</option>
-                                    <option th:each="cita : ${citas}" th:value="${cita.id}"
+                                    <option th:each="cita : ${citasOpciones}" th:value="${cita.id}"
                                         th:text="${'#' + cita.id + ' - ' + cita.usuario.nombre + ' / ' + cita.mascota.nombre + ' / ' + cita.servicio.nombre}">
                                         Cita
                                     </option>
@@ -1523,6 +1650,14 @@
             return value;
         };
 
+        const asegurarOpcionSelect = (field, value) => {
+            if (field.tagName !== 'SELECT' || !value) return;
+            const existe = Array.from(field.options).some((option) => option.value === value);
+            if (existe) return;
+
+            field.add(new Option(`Registro #${value}`, value, true, true));
+        };
+
         const limpiarFormularioAdmin = (form) => {
             if (!form) return;
             form.reset();
@@ -1533,47 +1668,166 @@
             });
         };
 
-        document.querySelectorAll('[data-admin-reset]').forEach((button) => {
-            button.addEventListener('click', () => {
-                limpiarFormularioAdmin(document.getElementById(button.dataset.adminReset));
-            });
-        });
+        const mostrarAlertaAdmin = (tipo, mensaje) => {
+            const pageBody = document.querySelector('.page-body');
+            if (!pageBody || !mensaje) return;
 
-        document.querySelectorAll('[data-admin-fill]').forEach((button) => {
-            button.addEventListener('click', () => {
-                const form = document.getElementById(button.dataset.adminFill);
-                limpiarFormularioAdmin(form);
-                if (!form) return;
-                Array.from(form.elements).forEach((field) => {
-                    if (!field.name || !Object.prototype.hasOwnProperty.call(button.dataset, field.name)) return;
-                    field.value = normalizarValorTemporal(field, button.dataset[field.name]);
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${tipo} alert-dismissible fade show`;
+            alert.role = 'alert';
+            alert.innerHTML = `<span></span><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>`;
+            alert.querySelector('span').textContent = mensaje;
+            pageBody.prepend(alert);
+        };
+
+        const cerrarModalesAdmin = () => {
+            document.querySelectorAll('.modal.show').forEach((modal) => {
+                bootstrap.Modal.getInstance(modal)?.hide();
+            });
+        };
+
+        const urlConParametrosActuales = (urlBase) => {
+            const destino = new URL(urlBase, window.location.origin);
+            const actual = new URL(window.location.href);
+            actual.searchParams.forEach((value, key) => {
+                if (!destino.searchParams.has(key)) destino.searchParams.set(key, value);
+            });
+            return destino;
+        };
+
+        const cargarAdmin = async (url, mensaje, tipo = 'success') => {
+            const destino = new URL(url, window.location.origin);
+            const response = await fetch(destino, { headers: { 'X-Admin-Ajax': 'true' } });
+            const html = await response.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const nuevaPageBody = doc.querySelector('.page-body');
+
+            if (!nuevaPageBody) {
+                window.location.href = destino;
+                return;
+            }
+
+            document.querySelector('.page-body').innerHTML = nuevaPageBody.innerHTML;
+            history.pushState(null, '', destino);
+            inicializarAdmin();
+
+            if (mensaje) mostrarAlertaAdmin(tipo, mensaje);
+            if (destino.hash) document.querySelector(destino.hash)?.scrollIntoView({ block: 'start' });
+        };
+
+        const enviarFormularioAdmin = async (form, submitter) => {
+            const confirmar = submitter?.dataset.confirmDelete;
+            if (confirmar && !confirm(confirmar)) return;
+
+            const response = await fetch(form.action, {
+                method: form.method || 'POST',
+                body: new FormData(form),
+                headers: { 'X-Admin-Ajax': 'true' }
+            });
+            const data = await response.json().catch(() => ({
+                ok: false,
+                message: 'No se pudo procesar la operacion.'
+            }));
+
+            if (!response.ok || !data.ok) {
+                mostrarAlertaAdmin('danger', data.message || 'No se pudo procesar la operacion.');
+                return;
+            }
+
+            cerrarModalesAdmin();
+            const destino = new URL(window.location.href);
+            if (data.anchor) destino.hash = data.anchor;
+            await cargarAdmin(destino, data.message, 'success');
+        };
+
+        const navegarConFiltro = async (form) => {
+            const destino = urlConParametrosActuales(form.action);
+            const anchor = form.dataset.adminFilterAnchor || '';
+
+            new FormData(form).forEach((value, key) => {
+                const texto = String(value).trim();
+                if (texto) destino.searchParams.set(key, texto);
+                else destino.searchParams.delete(key);
+            });
+
+            if (form.dataset.adminPageParam) destino.searchParams.delete(form.dataset.adminPageParam);
+            destino.hash = anchor;
+            await cargarAdmin(destino);
+        };
+
+        const limpiarFiltro = async (anchor) => {
+            const form = document.querySelector(`[data-admin-filter-anchor="${anchor}"]`);
+            if (!form) return;
+
+            limpiarFormularioAdmin(form);
+            await navegarConFiltro(form);
+        };
+
+        const inicializarAdmin = () => {
+            document.querySelectorAll('[data-admin-reset]:not([data-admin-bound])').forEach((button) => {
+                button.dataset.adminBound = 'true';
+                button.addEventListener('click', () => {
+                    limpiarFormularioAdmin(document.getElementById(button.dataset.adminReset));
                 });
             });
-        });
 
-        document.querySelectorAll('[data-confirm-delete]').forEach((button) => {
-            button.addEventListener('click', (event) => {
-                if (!confirm(button.dataset.confirmDelete)) event.preventDefault();
-            });
-        });
-
-        document.querySelectorAll('.nav-admin').forEach((link) => {
-            link.addEventListener('click', () => {
-                document.querySelectorAll('.nav-admin').forEach((item) => item.classList.remove('active'));
-                link.classList.add('active');
-            });
-        });
-
-        document.querySelectorAll('[data-table-filter]').forEach((input) => {
-            const table = document.getElementById(input.dataset.tableFilter);
-            if (!table) return;
-            input.addEventListener('input', () => {
-                const query = input.value.trim().toLowerCase();
-                table.querySelectorAll('tbody tr').forEach((row) => {
-                    row.classList.toggle('d-none', !row.textContent.toLowerCase().includes(query));
+            document.querySelectorAll('[data-admin-fill]:not([data-admin-bound])').forEach((button) => {
+                button.dataset.adminBound = 'true';
+                button.addEventListener('click', () => {
+                    const form = document.getElementById(button.dataset.adminFill);
+                    limpiarFormularioAdmin(form);
+                    if (!form) return;
+                    Array.from(form.elements).forEach((field) => {
+                        if (!field.name || !Object.prototype.hasOwnProperty.call(button.dataset, field.name)) return;
+                        const value = normalizarValorTemporal(field, button.dataset[field.name]);
+                        asegurarOpcionSelect(field, value);
+                        field.value = value;
+                    });
                 });
             });
-        });
+
+            document.querySelectorAll('form[method="post"]:not([data-admin-bound])').forEach((form) => {
+                if (!form.action.includes('/admin/')) return;
+                form.dataset.adminBound = 'true';
+                form.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    enviarFormularioAdmin(form, event.submitter);
+                });
+            });
+
+            document.querySelectorAll('.admin-filter-form:not([data-admin-bound])').forEach((form) => {
+                form.dataset.adminBound = 'true';
+                form.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    navegarConFiltro(form);
+                });
+            });
+
+            document.querySelectorAll('[data-admin-clear-filter]:not([data-admin-bound])').forEach((button) => {
+                button.dataset.adminBound = 'true';
+                button.addEventListener('click', () => limpiarFiltro(button.dataset.adminClearFilter));
+            });
+
+            document.querySelectorAll('.admin-pagination a:not(.disabled):not([data-admin-bound])').forEach((link) => {
+                link.dataset.adminBound = 'true';
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const destino = urlConParametrosActuales(link.href);
+                    if (link.hash) destino.hash = link.hash.slice(1);
+                    cargarAdmin(destino);
+                });
+            });
+
+            document.querySelectorAll('.nav-admin:not([data-admin-bound])').forEach((link) => {
+                link.dataset.adminBound = 'true';
+                link.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-admin').forEach((item) => item.classList.remove('active'));
+                    link.classList.add('active');
+                });
+            });
+        };
+
+        inicializarAdmin();
     </script>
 </body>
 
