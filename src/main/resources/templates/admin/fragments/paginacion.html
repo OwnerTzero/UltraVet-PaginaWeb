@@ -1,0 +1,30 @@
+<nav class="admin-pagination d-flex justify-content-between align-items-center mt-3"
+    th:fragment="pager(page, pageParam, anchor)" th:if="${page.totalPages > 1}">
+    <span class="small text-muted"
+        th:text="${'Pagina ' + (page.number + 1) + ' de ' + page.totalPages + ' - ' + page.totalElements + ' registros'}">
+        Pagina 1 de 1
+    </span>
+
+    <div class="btn-group btn-group-sm" role="group" aria-label="Paginacion">
+        <a class="btn btn-outline-secondary"
+            th:classappend="${page.first} ? ' disabled'"
+            th:href="@{/admin} + '?' + ${pageParam} + '=0#' + ${anchor}">
+            Inicio
+        </a>
+        <a class="btn btn-outline-secondary"
+            th:classappend="${!page.hasPrevious()} ? ' disabled'"
+            th:href="@{/admin} + '?' + ${pageParam} + '=' + ${page.number - 1} + '#' + ${anchor}">
+            Anterior
+        </a>
+        <a class="btn btn-outline-secondary"
+            th:classappend="${!page.hasNext()} ? ' disabled'"
+            th:href="@{/admin} + '?' + ${pageParam} + '=' + ${page.number + 1} + '#' + ${anchor}">
+            Siguiente
+        </a>
+        <a class="btn btn-outline-secondary"
+            th:classappend="${page.last} ? ' disabled'"
+            th:href="@{/admin} + '?' + ${pageParam} + '=' + ${page.totalPages - 1} + '#' + ${anchor}">
+            Final
+        </a>
+    </div>
+</nav>
